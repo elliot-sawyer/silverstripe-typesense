@@ -13,7 +13,8 @@
     "license": "gpl3-with-attribution",
     "autoload": {
         "psr-4": {
-            "ElliotSawyer\\SilverstripeTypesense\\": "src/"
+            "ElliotSawyer\\SilverstripeTypesense\\": "src/",
+            "ElliotSawyer\\SilverstripeTypesense\\Tests\\": "tests/"
         }
     },
     "authors": [

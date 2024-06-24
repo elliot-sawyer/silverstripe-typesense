@@ -1,0 +1,13 @@
+# * Silverstripe Typesense module
+# * @license GPL3 With Attribution
+# * @copyright Copyright (C) 2024 Elliot Sawyer
+---
+After: "*"
+---
+SilverStripe\Control\Director:
+  rules:
+    '_typesense': 'ElliotSawyer\SilverstripeTypesense\TypesenseController'
+ElliotSawyer\SilverstripeTypesense:
+  allowed_actions:
+    - license
+    - attribution_notice
