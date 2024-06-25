@@ -10,7 +10,7 @@
     "require-dev": {
         "phpunit/phpunit": "^9"
     },
-    "license": "gpl3-with-attribution",
+    "license": "lgpl3-with-attribution",
     "autoload": {
         "psr-4": {
             "ElliotSawyer\\SilverstripeTypesense\\": "src/",
