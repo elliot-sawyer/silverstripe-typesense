@@ -35,7 +35,7 @@ final class TypesenseController extends Controller
             ?->getModule('elliot-sawyer/silverstripe-typesense');
         if($module instanceof Module) {
             $path = realpath($module->getPath());
-            $license = $path . DIRECTORY_SEPARATOR . 'LICENSE';
+            $license = $path . DIRECTORY_SEPARATOR . 'LICENSE.md';
             if(is_readable($license)) {
                 $licenseContent = file_get_contents($license);
                 if(!preg_match('/Copyright \(C\) \d{4} Elliot Sawyer/', $licenseContent)) {
@@ -43,7 +43,7 @@ final class TypesenseController extends Controller
                     $this->httpError(451, $licenseContent);
                 }
             } else {
-                $licenseContent = "LICENSE not readable";
+                $licenseContent = "LICENSE.md not readable";
                 $this->httpError(451, $licenseContent);
             }
         } else {
@@ -74,6 +74,6 @@ final class TypesenseController extends Controller
 
     public function CopyrightStatement(): string
     {
-        return "This software includes contributions from Elliot Sawyer, available under the GPL3 license.";
+        return "This software includes contributions from Elliot Sawyer, available under the LGPL v3.0 license.";
     }
 }

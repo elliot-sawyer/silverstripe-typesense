@@ -26,11 +26,11 @@ class LicenseCheckTest extends SapphireTest implements TestOnly
 
         $headers = $license->getHeaders();
         $this->assertArrayHasKey('x-typesense-license', $headers);
-        $this->assertEquals('This software includes contributions from Elliot Sawyer, available under the GPL3 license.', $headers['x-typesense-license']);
+        $this->assertEquals('This software includes contributions from Elliot Sawyer, available under the LGPL v3.0 license.', $headers['x-typesense-license']);
 
         $headers = $attribution_notice->getHeaders();
         $this->assertArrayHasKey('x-typesense-license', $headers);
-        $this->assertEquals('This software includes contributions from Elliot Sawyer, available under the GPL3 license.', $headers['x-typesense-license']);
+        $this->assertEquals('This software includes contributions from Elliot Sawyer, available under the LGPL v3.0 license.', $headers['x-typesense-license']);
     }
 
     public function testLicenseRemoved()
@@ -40,8 +40,8 @@ class LicenseCheckTest extends SapphireTest implements TestOnly
             ?->getModule('elliot-sawyer/silverstripe-typesense');
         $path = realpath($module->getPath());
         rename(
-            $path.DIRECTORY_SEPARATOR.'LICENSE',
-            $path.DIRECTORY_SEPARATOR.'LICENSE___'
+            $path.DIRECTORY_SEPARATOR.'LICENSE.md',
+            $path.DIRECTORY_SEPARATOR.'LICENSE___.md'
         );
 
         $ctrl = new TypesenseController();
@@ -49,7 +49,7 @@ class LicenseCheckTest extends SapphireTest implements TestOnly
 
         $this->expectException(HTTPResponse_Exception::class);
         $this->expectExceptionCode(451);
-        $this->expectExceptionMessage('LICENSE not readable');
+        $this->expectExceptionMessage('LICENSE.md not readable');
         $license = $ctrl->license($req);
 
         $headers = $license->getHeaders();
@@ -62,7 +62,7 @@ class LicenseCheckTest extends SapphireTest implements TestOnly
             ?->getManifest()
             ?->getModule('elliot-sawyer/silverstripe-typesense');
         $path = realpath($module->getPath());
-        $license = $path.DIRECTORY_SEPARATOR.'LICENSE';
+        $license = $path.DIRECTORY_SEPARATOR.'LICENSE.md';
         $licenseContents = file_get_contents($license);
         $licenseContents = str_replace('Copyright (C) 2024 Elliot Sawyer', 'Copyright (C) 2024 Tyler Durden', $licenseContents);
         file_put_contents($license, $licenseContents);
@@ -78,7 +78,7 @@ class LicenseCheckTest extends SapphireTest implements TestOnly
 
     public function testCopyrightStatement()
     {
-        $statement = 'This software includes contributions from Elliot Sawyer, available under the GPL3 license.';
+        $statement = 'This software includes contributions from Elliot Sawyer, available under the LGPL v3.0 license.';
         $ctrl = new TypesenseController();
         $copyright = $ctrl->CopyrightStatement();
 
@@ -93,11 +93,11 @@ class LicenseCheckTest extends SapphireTest implements TestOnly
             ?->getModule('elliot-sawyer/silverstripe-typesense');
         $path = realpath($module->getPath());
         @rename(
-            $path.DIRECTORY_SEPARATOR.'LICENSE___',
-            $path.DIRECTORY_SEPARATOR.'LICENSE'
+            $path.DIRECTORY_SEPARATOR.'LICENSE___.md',
+            $path.DIRECTORY_SEPARATOR.'LICENSE.md'
         );
 
-        $license = $path.DIRECTORY_SEPARATOR.'LICENSE';
+        $license = $path.DIRECTORY_SEPARATOR.'LICENSE.md';
         $licenseContents = file_get_contents($license);
         $licenseContents = str_replace('Copyright (C) 2024 Tyler Durden', 'Copyright (C) 2024 Elliot Sawyer', $licenseContents);
         file_put_contents($license, $licenseContents);
