@@ -6,7 +6,7 @@ After: "*"
 ---
 SilverStripe\Control\Director:
   rules:
-    '_typesense': 'ElliotSawyer\SilverstripeTypesense\TypesenseController'
+    '_typesense': 'ElliotSawyer\SilverstripeTypesense\Typesense'
 ElliotSawyer\SilverstripeTypesense:
   allowed_actions:
     - license

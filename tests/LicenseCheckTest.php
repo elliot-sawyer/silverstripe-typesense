@@ -8,7 +8,7 @@ namespace ElliotSawyer\SilverstripeTypesense\Tests;
 
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\Dev\TestOnly;
-use ElliotSawyer\SilverstripeTypesense\TypesenseController;
+use ElliotSawyer\SilverstripeTypesense\Typesense;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Control\HTTPResponse_Exception;
 use SilverStripe\Core\Cache\ManifestCacheFactory;
@@ -19,7 +19,7 @@ class LicenseCheckTest extends SapphireTest implements TestOnly
 {
     public function testGood()
     {
-        $ctrl = new TypesenseController();
+        $ctrl = new Typesense();
         $req = new HTTPRequest('GET', '/');
         $license = $ctrl->license($req);
         $attribution_notice =  $ctrl->attribution_notice($req);
@@ -44,7 +44,7 @@ class LicenseCheckTest extends SapphireTest implements TestOnly
             $path.DIRECTORY_SEPARATOR.'LICENSE___.md'
         );
 
-        $ctrl = new TypesenseController();
+        $ctrl = new Typesense();
         $req = new HTTPRequest('GET', '/');
 
         $this->expectException(HTTPResponse_Exception::class);
@@ -67,7 +67,7 @@ class LicenseCheckTest extends SapphireTest implements TestOnly
         $licenseContents = str_replace('Copyright (C) 2024 Elliot Sawyer', 'Copyright (C) 2024 Tyler Durden', $licenseContents);
         file_put_contents($license, $licenseContents);
 
-        $ctrl = new TypesenseController();
+        $ctrl = new Typesense();
         $req = new HTTPRequest('GET', '/');
 
         $this->expectException(HTTPResponse_Exception::class);
@@ -79,7 +79,7 @@ class LicenseCheckTest extends SapphireTest implements TestOnly
     public function testCopyrightStatement()
     {
         $statement = 'This software includes contributions from Elliot Sawyer, available under the LGPL v3.0 license.';
-        $ctrl = new TypesenseController();
+        $ctrl = Typesense::create();
         $copyright = $ctrl->CopyrightStatement();
 
         $this->assertEquals($statement, $copyright);

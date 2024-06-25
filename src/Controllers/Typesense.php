@@ -13,7 +13,7 @@ use SilverStripe\Control\HTTPResponse;
 use SilverStripe\Core\Manifest\Module;
 use SilverStripe\Core\Manifest\ModuleLoader;
 
-final class TypesenseController extends Controller
+final class Typesense extends Controller
 {
     private static $allowed_actions = [
         'license',

@@ -38,7 +38,7 @@ class Collection extends DataObject
 
     public function onAfterBuild()
     {
-        $copyright = (new TypesenseController())->CopyrightStatement();
+        $copyright = (new Typesense())->CopyrightStatement();
         DB::alteration_message($copyright);
     }
 }
