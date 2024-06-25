@@ -47,7 +47,7 @@ class Field extends DataObject {
         'facet' => 'Boolean(0)',
         'optional' => 'Boolean(0)',
         'index' => 'Boolean(1)',
-        'sort' => 'Boolean(0)',
+        'sort' => 'Boolean(1)',
         'store' => 'Boolean(1)',
         'infix' => 'Boolean(0)',
 
@@ -104,5 +104,16 @@ class Field extends DataObject {
             $valid->addError('Invalid field type');
         }
         return $valid;
+    }
+
+    public static function find_or_make($fieldDefinition, $parentID): Field
+    {
+        $field = Field::get()->filter($fieldDefinition + ['CollectionID' => $parentID])->first()
+            ?: Field::create($fieldDefinition + ['CollectionID' => $parentID]);
+        if(!$field?->ID) {
+            $field->write();
+        }
+
+        return $field;
     }
 }
