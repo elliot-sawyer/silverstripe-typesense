@@ -74,7 +74,15 @@ class LicenseCheckTest extends SapphireTest implements TestOnly
         $this->expectExceptionCode(451);
         $this->expectExceptionMessage('Copyright statement altered');
         $license = $ctrl->license($req);
+    }
 
+    public function testCopyrightStatement()
+    {
+        $statement = 'This software includes contributions from Elliot Sawyer, available under the GPL3 license.';
+        $ctrl = new TypesenseController();
+        $copyright = $ctrl->CopyrightStatement();
+
+        $this->assertEquals($statement, $copyright);
     }
 
     protected function tearDown(): void
@@ -93,7 +101,5 @@ class LicenseCheckTest extends SapphireTest implements TestOnly
         $licenseContents = file_get_contents($license);
         $licenseContents = str_replace('Copyright (C) 2024 Tyler Durden', 'Copyright (C) 2024 Elliot Sawyer', $licenseContents);
         file_put_contents($license, $licenseContents);
-
-
     }
 }

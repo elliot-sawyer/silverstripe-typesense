@@ -13,7 +13,7 @@ use SilverStripe\Control\HTTPResponse;
 use SilverStripe\Core\Manifest\Module;
 use SilverStripe\Core\Manifest\ModuleLoader;
 
-class TypesenseController extends Controller
+final class TypesenseController extends Controller
 {
     private static $allowed_actions = [
         'license',
@@ -27,7 +27,7 @@ class TypesenseController extends Controller
      * @param $request
      * @return HttpResponse
      */
-    final public function license(HTTPRequest $request): HTTPResponse
+    public function license(HTTPRequest $request): HTTPResponse
     {
         $licenseContent = 'Unable to load license';
         $module = ModuleLoader::inst()
@@ -61,14 +61,19 @@ class TypesenseController extends Controller
      * @param HTTPRequest|null $request
      * @return string
      */
-    final public function attribution_notice(HTTPRequest $request = null): HTTPResponse
+    public function attribution_notice(HTTPRequest $request = null): HTTPResponse
     {
-        $attribution_notice = "This software includes contributions from Elliot Sawyer, available under the GPL3 license.";
+        $attribution_notice = $this->CopyrightStatement();
         if($request && $request instanceof HTTPRequest) {
             $this->getResponse()->addHeader('Content-Type', 'text/plain');
             $this->getResponse()->addHeader('X-Typesense-License', $attribution_notice);
         }
         return $this->getResponse()->setBody($attribution_notice);
 
+    }
+
+    public function CopyrightStatement(): string
+    {
+        return "This software includes contributions from Elliot Sawyer, available under the GPL3 license.";
     }
 }
