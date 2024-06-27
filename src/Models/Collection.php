@@ -13,8 +13,10 @@ use LeKoala\CmsActions\SilverStripeIcons;
 use Psr\Log\LoggerInterface;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Forms\CheckboxField;
+use SilverStripe\Forms\CompositeValidator;
 use SilverStripe\Forms\DropdownField;
 use SilverStripe\Forms\ReadonlyField;
+use SilverStripe\Forms\RequiredFields;
 use SilverStripe\Forms\TextField;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DB;
@@ -37,7 +39,12 @@ class Collection extends DataObject
     ];
 
     private static $summary_fields = [
-        'Name'
+        'Name',
+        'DefaultSortingField',
+        'TokenSeperators',
+        'SymbolsToIndex',
+        'RecordClass',
+        'Enabled.Nice' => 'Is enabled',
     ];
 
     private static $default_collection_fields = [
@@ -57,12 +64,12 @@ class Collection extends DataObject
             TextField::create('Name')
                 ->setDescription('Name of the collection'),
 
-            //TODO: These are advanced features
+            TextField::create('TokenSeperators')
+                ->setDescription('List of symbols or special characters to be used for splitting the text into individual words in addition to space and new-line characters. For e.g. you can add - (hyphen) to this list to make a word like non-stick to be split on hyphen and indexed as two separate words. <a href="https://typesense.org/docs/guide/tips-for-searching-common-types-of-data.html" target="_new">More info</a>'),
 
-            // TextField::create('TokenSeperators')
-            //     ->setDescription('List of symbols or special characters to be used for splitting the text into individual words in addition to space and new-line characters. For e.g. you can add - (hyphen) to this list to make a word like non-stick to be split on hyphen and indexed as two separate words. <a href="https://typesense.org/docs/guide/tips-for-searching-common-types-of-data.html" target="_new">More info</a>'),
-            // TextField::create('SymbolsToIndex')
-            //     ->setDescription('List of symbols or special characters to be indexed. For e.g. you can add + to this list to make the word c++ indexable verbatim. <a href="https://typesense.org/docs/guide/tips-for-searching-common-types-of-data.html" target="_new">More info</a>'),
+            TextField::create('SymbolsToIndex')
+                ->setDescription('List of symbols or special characters to be indexed. For e.g. you can add + to this list to make the word c++ indexable verbatim. <a href="https://typesense.org/docs/guide/tips-for-searching-common-types-of-data.html" target="_new">More info</a>'),
+
             DropdownField::create(
                 'DefaultSortingField',
                 'Default sorting field',
@@ -233,5 +240,16 @@ class Collection extends DataObject
     public function onAfterDelete()
     {
         $this->deleteFromTypesenseServer();
+    }
+
+    public function getCMSCompositeValidator(): CompositeValidator
+    {
+        $validator = parent::getCMSCompositeValidator();
+
+        $validator->addValidator(RequiredFields::create([
+            'Name',
+        ]));
+
+        return $validator;
     }
 }
