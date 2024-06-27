@@ -7,6 +7,7 @@
 namespace ElliotSawyer\SilverstripeTypesense;
 
 use Exception;
+use LeKoala\CmsActions\ActionButtonsGroup;
 use LeKoala\CmsActions\CustomAction;
 use LeKoala\CmsActions\SilverStripeIcons;
 use Psr\Log\LoggerInterface;
@@ -80,16 +81,27 @@ class Collection extends DataObject
     public function getCMSActions()
     {
         $actions = parent::getCMSActions();
-        $action1 = CustomAction::create("syncWithTypesenseServer", "Synchronize with Typesense")
-            ->addExtraClass('btn-warning')
-            ->setButtonIcon(SilverStripeIcons::ICON_SYNC)
-            ->setConfirmation(true);
-        $action2 = CustomAction::create("deleteFromTypesenseServer", "Delete from Typesense")
-            ->addExtraClass('btn-danger')
-            ->setButtonIcon(SilverStripeIcons::ICON_TRASH)
-            ->setConfirmation(true);
-        $actions->push($action1);
-        $actions->push($action2);
+
+        $typesenseActions = [
+            CustomAction::create("syncWithTypesenseServer", "Update collection in Typesense")
+                ->setAttribute('title', 'This action will require a reindex')
+                ->removeExtraClass('btn-info')
+                ->addExtraClass('btn-outline-danger')
+                ->setButtonIcon(SilverStripeIcons::ICON_SYNC)
+                ->setConfirmation('This action will require a reindex, are you sure you want to continue?'),
+            CustomAction::create("deleteFromTypesenseServer", "Delete from Typesense")
+                ->removeExtraClass('btn-info')
+                ->addExtraClass('btn-outline-danger')
+                ->setButtonIcon(SilverStripeIcons::ICON_TRASH_BIN)
+                ->setConfirmation('You are about to delete your collection, are you sure?')
+        ];
+
+        $groupAction = ActionButtonsGroup::create($typesenseActions);
+
+        if($this->ID) {
+            $actions->push($groupAction);
+        }
+
 
         return $actions;
     }
