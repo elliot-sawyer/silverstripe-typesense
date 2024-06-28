@@ -364,6 +364,11 @@ class Collection extends DataObject
             $records = $recordClass::get();
         }
 
+        if($this->ExcludedClasses) {
+            $excludedClasses = json_decode($this->ExcludedClasses, true);
+            $records = $records->exclude('ClassName', array_values($excludedClasses));
+        }
+
         return $records;
     }
 
