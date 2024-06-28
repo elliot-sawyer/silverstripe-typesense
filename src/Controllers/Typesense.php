@@ -71,7 +71,7 @@ final class Typesense extends Controller
      */
     public static function parse_typesense_server() : array
     {
-        $server = Environment::getEnv('TYPESENSE_SERVER');
+        $server = Environment::getEnv('TYPESENSE_SERVER') ?? '';
         $parts = parse_url($server);
         return count($parts) == 3 ? $parts : [];
     }

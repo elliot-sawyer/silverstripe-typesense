@@ -12,6 +12,7 @@ use LeKoala\CmsActions\CustomAction;
 use LeKoala\CmsActions\SilverStripeIcons;
 use Page;
 use Psr\Log\LoggerInterface;
+use SilverStripe\Assets\File;
 use SilverStripe\CMS\Model\RedirectorPage;
 use SilverStripe\Core\ClassInfo;
 use SilverStripe\Core\Injector\Injector;
@@ -28,6 +29,7 @@ use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DB;
 use SilverStripe\ORM\FieldType\DBDate;
 use SilverStripe\ORM\FieldType\DBTime;
+
 use Typesense\Exceptions\ObjectAlreadyExists;
 
 class Collection extends DataObject
@@ -66,12 +68,21 @@ class Collection extends DataObject
         ['name' => 'Created', 'type' => 'int64'],
     ];
 
+    private static $defaults = [
+        'Enabled' => true,
+        'ConnectionTimeout' => 2,
+        'ImportLimit' => 10000,
+    ];
+
     private static $cascade_deletes = ['Fields'];
+
+
 
     public function getCMSFields()
     {
+        $recordClassDescription = 'The Silverstripe class (and subclasses) of DataObjects contained in this collection.  Only a single object type is supported.  To ensure data consistency it cannot be changed once set; you will need to delete the collection and build a new one';
         $fields = parent::getCMSFields();
-        $fields->removeByName(['Name','DefaultSortingField','TokenSeperators','SymbolsToIndex','RecordClass','Enabled', 'ImportLimit', 'ExcludedClasses']);
+        $fields->removeByName(['Name','DefaultSortingField','TokenSeperators','SymbolsToIndex','RecordClass','Enabled', 'ImportLimit', 'ConnectionTimeout', 'ExcludedClasses']);
         $fields->addFieldsToTab('Root.Main', [
             TextField::create('Name')
                 ->setDescription('Name of the collection'),
@@ -89,16 +100,8 @@ class Collection extends DataObject
                 $this->DefaultSortingField
             )->setHasEmptyDefault(true)
                 ->setDescription('The name of an int32 / float field that determines the order in which the search results are ranked when a sort_by clause is not provided during searching. This field must indicate some kind of popularity. '),
-            ReadonlyField::create('RecordClass', 'Record class name')
-                ->setDescription('The Silverstripe class (and subclasses) of DataObjects contained in this collection.  TODO: Multiple objects are not yet supported'),
-            CheckboxField::create('Enabled')
-                ->setDescription('When disabled, this collection will not be re-indexed. It is still available through the Typesense client. Do not rely on this for security.'),
-
-            NumericField::create('ImportLimit')
-                ->setDescription('This is the number of documents that can be uploaded into Typesense at once when the sync task is run.  This is usually adjusted for speed and memory reasons, for example if your collection is very large (2M records) or the indexing task is being run on a system with limited memory.'),
-
-            NumericField::create('ConnectionTimeout')
-                ->setDescription('When syncing a large dataset to Typesense the connector can time out.  You can adjust this timeout limit as-needed.  The units are measure in seconds.'),
+            TextField::create('RecordClass', 'Record class name')
+                ->setDescription($recordClassDescription),
         ]);
 
         if($this->ID && $this->RecordClass) {
@@ -107,8 +110,21 @@ class Collection extends DataObject
             }, ClassInfo::subclassesFor($this->RecordClass, false));
 
             $fields->addFieldsToTab('Root.Main', [
+
+                ReadonlyField::create('RecordClass', 'Record class name')
+                    ->setDescription($recordClassDescription),
+
+                CheckboxField::create('Enabled')
+                    ->setDescription('When disabled, this collection will not be re-indexed. It is still available through the Typesense client. Do not rely on this for security.'),
+
+                NumericField::create('ImportLimit')
+                    ->setDescription('This is the number of documents that can be uploaded into Typesense at once when the sync task is run.  This is usually adjusted for speed and memory reasons, for example if your collection is very large (2M records) or the indexing task is being run on a system with limited memory.'),
+
+                NumericField::create('ConnectionTimeout')
+                    ->setDescription('When syncing a large dataset to Typesense the connector can time out.  You can adjust this timeout limit as-needed.  The units are measure in seconds.'),
+
                 ListboxField::create('ExcludedClasses', 'Excluded classes', $excludedClassesList)
-                ->setDescription("By default, all subclasses of the record class are indexed. To exclude any classes, define an array of them on excludedClasses"),
+                    ->setDescription("By default, all subclasses of the record class are indexed. To exclude any classes, define an array of them on excludedClasses"),
             ]);
         }
         return $fields;
@@ -134,7 +150,7 @@ class Collection extends DataObject
 
         $groupAction = ActionButtonsGroup::create($typesenseActions);
 
-        if($this->ID) {
+        if($this->ID && $this->Fields()->Count() > 0) {
             $actions->push($groupAction);
         }
 
@@ -184,9 +200,6 @@ class Collection extends DataObject
 
         $excludedClasses = $collectionFields['excluded_classes'] ?? [];
         $collection->ExcludedClasses = mb_strtolower(json_encode($excludedClasses));
-        // foreach($excludedClasses as $ec) {
-
-        // }
         $collection->write();
         foreach($collectionFields['fields'] as $fieldDefinition) {
             $field = Field::find_or_make($fieldDefinition, $collection->ID);
@@ -284,21 +297,30 @@ class Collection extends DataObject
         $validator = parent::getCMSCompositeValidator();
 
         $validator->addValidator(RequiredFields::create([
-            'Name',
+            'Name', 'RecordClass'
         ]));
 
         return $validator;
     }
 
+    public function validate()
+    {
+        $valid = parent::validate();
+        if(!class_exists($this->RecordClass)) {
+            $valid->addFieldError('RecordClass', 'Invalid class');
+        }
+        return $valid;
+    }
+
     public function onBeforeWrite()
     {
         parent::onBeforeWrite();
-        $importLimit = (int) $this->ImportLimit;
-        $connectionTimeout = (int) $this->ConnectionTimeout;
-        if($importLimit < 0) {
+        $importLimit = (int) $this->ImportLimit ?? $this->config()->defaults['ImportLimit'];
+        $connectionTimeout = (int) $this->ConnectionTimeout ?? $this->config()->defaults['ConnectionTimeout'];
+        if($importLimit <= 0) {
             $importLimit = 1;
         }
-        if($connectionTimeout < 0) {
+        if($connectionTimeout <= 0) {
             $connectionTimeout = 1;
         }
 

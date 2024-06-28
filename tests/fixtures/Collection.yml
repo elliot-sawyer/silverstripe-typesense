@@ -1,0 +1,8 @@
+ElliotSawyer\SilverstripeTypesense\Collection:
+  test:
+    Name: TestCollection'
+    RecordClass: Page
+ElliotSawyer\SilverstripeTypesense\Field:
+  field1:
+    name: Title
+    type: string

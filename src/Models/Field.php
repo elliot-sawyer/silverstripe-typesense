@@ -75,6 +75,15 @@ class Field extends DataObject {
         'infix.Nice' => 'Infix',
     ];
 
+    private static $defaults = [
+        'facet' => false,
+        'optional' => false,
+        'index' => true,
+        'sort' => true,
+        'store' => true,
+        'infix' => false,
+    ];
+
     public function getCMSFields()
     {
         $fields = parent::getCMSFields();
