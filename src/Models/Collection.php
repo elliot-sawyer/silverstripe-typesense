@@ -119,13 +119,13 @@ class Collection extends DataObject
         return $actions;
     }
 
-    public function syncWithTypesenseServer()
+    public function syncWithTypesenseServer(): string
     {
         $this->__createOrUpdateOnServer();
         return 'Synchronization of '.$this->Name.' with Typesense completed';
     }
 
-    public function deleteFromTypesenseServer()
+    public function deleteFromTypesenseServer(): string
     {
         $this->__deleteOnServer();
         return 'Collection' .($this->ID ? $this->Name : ''). ' on Typesense server completed';

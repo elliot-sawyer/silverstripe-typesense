@@ -21,8 +21,7 @@ class TypesenseSyncTask extends BuildTask
         if(!$collections) return;
         foreach($collections as $collection) {
             if(!$client->collections[$collection->Name]->exists()) {
-                DB::alteration_message('The '.$collection->Name.' collection does not exist in Typesense yet, you need to build it in the CMS');
-                continue;
+                DB::alteration_message($collection->syncWithTypesenseServer());
             }
             $collection->import();
         }
