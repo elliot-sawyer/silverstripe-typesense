@@ -18,12 +18,17 @@ use SilverStripe\Forms\DropdownField;
 use SilverStripe\Forms\ReadonlyField;
 use SilverStripe\Forms\RequiredFields;
 use SilverStripe\Forms\TextField;
+use SilverStripe\ORM\DataList;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DB;
+use SilverStripe\ORM\FieldType\DBDate;
+use SilverStripe\ORM\FieldType\DBTime;
 use Typesense\Exceptions\ObjectAlreadyExists;
 
 class Collection extends DataObject
 {
+    private static $import_limit = 10000;
+    private static $import_connection_timeout = 300;
     private static $table_name = 'TypesenseCollection';
     private static $db = [
         'Name' => 'Varchar(64)',
@@ -32,6 +37,7 @@ class Collection extends DataObject
         'SymbolsToIndex' => 'Varchar(128)',
         'RecordClass' => 'Varchar(255)',
         'Enabled' => 'Boolean(1)',
+        // 'UpdateCollectionOnSync' => 'Boolean(1)'
     ];
 
     private static $has_many = [
@@ -251,5 +257,106 @@ class Collection extends DataObject
         ]));
 
         return $validator;
+    }
+
+    /**
+     * Bulk load documents into Typesense
+     *
+     * @param integer $limit
+     * @param integer $connection_timeout
+     * @return void
+     */
+    public function import()
+    {
+        $limit = static::config()->import_limit;
+        $connection_timeout = static::config()->import_connection_timeout;
+        $client = Typesense::client($connection_timeout);
+        $i = 0;
+        $count = $this->getRecordsCount();
+        DB::alteration_message(sprintf("Indexing %s", $this->Name));
+        if($count === 0) {
+            DB::alteration_message('... no documents found!');
+        }
+        while($records = $this->getRecords()->limit($limit, $i)) {
+            $limitCount = $records->count();
+            if($limitCount == 0) break;
+            $docs = [];
+
+            $fieldsArray = $this->FieldsArray();
+            foreach($records as $record) {
+                $data = [];
+                if($record->hasMethod('getTypesenseDocument')) {
+                    $data = $record->getTypesenseDocument();
+                } else {
+                    $data = $this->getTypesenseDocument($record, $fieldsArray);
+                }
+                if($data) {
+                    $docs[] = $data;
+                }
+            }
+            $client->collections[$this->Name]->documents->import($docs, ['action' => 'emplace']);
+            DB::alteration_message(sprintf("... added [%d / %d] documents to %s", $i + $limitCount, $count, $this->Name));
+
+            $i += $limit;
+        }
+    }
+
+    /**
+     * Get all records for this versions RecordClass
+     *
+     * @return DataList
+     */
+    protected function getRecords(): DataList
+    {
+        $records = null;
+        $recordClass = $this->RecordClass;
+        if(class_exists('SilverStripe\Subsites\Model\Subsite')) {
+            \SilverStripe\Subsites\Model\Subsite::disable_subsite_filter();
+        }
+        if(class_exists('SilverStripe\Versioned\Versioned')) {
+            $records = \SilverStripe\Versioned\Versioned::get_by_stage($recordClass, \SilverStripe\Versioned\Versioned::LIVE);
+        } else {
+            $records = $recordClass::get();
+        }
+
+        return $records;
+    }
+
+    /**
+     * Get the total database count of available documents that can be added to this collection
+     * Note: This is NOT the total documents that have been added to Typesense,
+     *
+     * @return integer
+     */
+    protected function getRecordsCount(): int
+    {
+        return $this->getRecords()->count();
+    }
+
+    /**
+     * Converts a Silverstripe record into a Typesense document according to its schema
+     *
+     * @param DataObject $record
+     * @param array $fieldsArray array of fields defined on the collection
+     * @return array
+     */
+    public function getTypesenseDocument($record, $fieldsArray = []): array
+    {
+        $data = [];
+        foreach($fieldsArray as $field) {
+            $name = $field['name'];
+            $data[$name] = $record->__get($name);
+            if(!$data[$name] && $record->hasMethod($name)) {
+                $data[$name] = $record->$name();
+            }
+            if(strtolower($name) == 'id') {
+                $data['id'] = (string) $record->ID;
+            }
+            if($record->dbObject($name) instanceof DBDate || $record->dbObject($name) instanceof DBTime) {
+                $data[$name] = strtotime($record->$name);
+            }
+        }
+
+        return $data;
     }
 }

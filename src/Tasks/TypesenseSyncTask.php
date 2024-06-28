@@ -7,6 +7,7 @@
 namespace ElliotSawyer\SilverstripeTypesense;
 
 use SilverStripe\Dev\BuildTask;
+use SilverStripe\ORM\DB;
 
 class TypesenseSyncTask extends BuildTask
 {
@@ -18,6 +19,13 @@ class TypesenseSyncTask extends BuildTask
         $client = Typesense::client();
         $collections = $this->findOrMakeAllCollections();
         if(!$collections) return;
+        foreach($collections as $collection) {
+            if(!$client->collections[$collection->Name]->exists()) {
+                DB::alteration_message('The '.$collection->Name.' collection does not exist in Typesense yet, you need to build it in the CMS');
+                continue;
+            }
+            $collection->import();
+        }
     }
 
     private function findOrMakeAllCollections()
