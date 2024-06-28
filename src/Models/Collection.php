@@ -37,7 +37,8 @@ class Collection extends DataObject
         'SymbolsToIndex' => 'Varchar(128)',
         'RecordClass' => 'Varchar(255)',
         'Enabled' => 'Boolean(1)',
-        'ImportLimit' => 'Int(10000)'
+        'ImportLimit' => 'Int(10000)',
+        'ConnectionTimeout' => 'Int(2)'
     ];
 
     private static $has_many = [
@@ -89,7 +90,10 @@ class Collection extends DataObject
                 ->setDescription('When disabled, this collection will not be re-indexed. It is still available through the Typesense client. Do not rely on this for security.'),
 
             NumericField::create('ImportLimit')
-                ->setDescription('This is the number of documents that can be uploaded into Typesense at once when the sync task is run.  This is usually adjusted for speed and memory reasons, for example if your collection is very large (2M records) or the indexing task is being run on a system with limited memory.')
+                ->setDescription('This is the number of documents that can be uploaded into Typesense at once when the sync task is run.  This is usually adjusted for speed and memory reasons, for example if your collection is very large (2M records) or the indexing task is being run on a system with limited memory.'),
+
+            NumericField::create('ConnectionTimeout')
+                ->setDescription('When syncing a large dataset to Typesense the connector can time out.  You can adjust this timeout limit as-needed.  The units are measure in seconds.')
         ]);
         return $fields;
     }
@@ -160,6 +164,7 @@ class Collection extends DataObject
         $collection->TokenSeperators = $collectionFields['token_separators'] ?? null;
         $collection->SymbolsToIndex = $collectionFields['symbols_to_index'] ?? null;
         $collection->ImportLimit = $collectionFields['import_limit'] ?? 10000;
+        $collection->ConnectionTimeout = $collectionFields['connection_timeout'] ?? 2;
         $collection->write();
         foreach($collectionFields['fields'] as $fieldDefinition) {
             $field = Field::find_or_make($fieldDefinition, $collection->ID);
@@ -267,24 +272,27 @@ class Collection extends DataObject
     {
         parent::onBeforeWrite();
         $importLimit = (int) $this->ImportLimit;
+        $connectionTimeout = (int) $this->ConnectionTimeout;
         if($importLimit < 0) {
             $importLimit = 1;
         }
+        if($connectionTimeout < 0) {
+            $connectionTimeout = 1;
+        }
 
         $this->ImportLimit = $importLimit;
+        $this->ConnectionTimeout = $connectionTimeout;
     }
 
     /**
      * Bulk load documents into Typesense
      *
-     * @param integer $limit
-     * @param integer $connection_timeout
      * @return void
      */
-    public function import()
+    public function import(): void
     {
         $limit = (int) ($this->ImportLimit ?: 1);
-        $connection_timeout = static::config()->import_connection_timeout;
+        $connection_timeout = (int) $this->ConnectionTimeout ?: 2;
         $client = Typesense::client($connection_timeout);
         $i = 0;
         $count = $this->getRecordsCount();
