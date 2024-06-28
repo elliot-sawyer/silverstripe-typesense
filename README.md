@@ -17,7 +17,7 @@ ElliotSawyer\SilverstripeTypesense\Typesense:
       name: Pages
       fields:
         - { name: Title, type: string, sort: true }
-        - { name: Content, type: string }
+        - { name: Content, type: string, optional: true }
         - { name: Link, type: string, index: false, optional: true}
       default_sorting_field: # 'exampleField'
       token_separators: # '-'

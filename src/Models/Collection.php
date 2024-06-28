@@ -339,6 +339,7 @@ class Collection extends DataObject
                     $docs[] = $data;
                 }
             }
+
             $client->collections[$this->Name]->documents->import($docs, ['action' => 'emplace']);
             DB::alteration_message(sprintf("... added [%d / %d] documents to %s", $i + $limitCount, $count, $this->Name));
 
