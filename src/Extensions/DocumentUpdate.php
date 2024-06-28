@@ -29,13 +29,14 @@ class DocumentUpdate extends DataExtension
         return Collection::get()
             ->find('RecordClass', $this->owner->ClassName);
     }
+
     public function onAfterWrite()
     {
         try {
             if(in_array($this->owner, $this->getValidTypesenseClasses())) {
                 $client = Typesense::client();
                 $collection = $this->getTypesenseCollection();
-                if($collection) {
+                if($collection && $collection->checkExistance()) {
                     $record = $this->owner;
                     $data = [];
                     if(method_exists($record, 'getTypesenseDocument')) {
@@ -57,7 +58,7 @@ class DocumentUpdate extends DataExtension
             if(in_array($this->owner, $this->getValidTypesenseClasses())) {
                 $client = Typesense::client();
                 $collection = $this->getTypesenseCollection();
-                if($collection && $this->owner->ID) {
+                if($collection && $collection->checkExistance() && $this->owner->ID) {
                     $client->collections[$collection->Name]->documents[(string) $this->owner->ID]->delete();
                 }
             }

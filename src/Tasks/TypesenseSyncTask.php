@@ -16,6 +16,9 @@ class TypesenseSyncTask extends BuildTask
     private static $segment = 'TypesenseSyncTask';
     public function run($request = null)
     {
+        $copyright = (new Typesense())->CopyrightStatement();
+        DB::alteration_message($copyright);
+
         $client = Typesense::client();
         $collections = $this->findOrMakeAllCollections();
         if(!$collections) return;

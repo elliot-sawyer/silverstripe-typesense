@@ -12,7 +12,7 @@ use ElliotSawyer\SilverstripeTypesense\Typesense;
 use Page;
 use SilverStripe\Dev\SapphireTest;
 
-class CollectionTest extends SapphireTest
+class DocumentTest extends SapphireTest
 {
     protected static $fixture_file = [
         'fixtures/Collection.yml'
@@ -26,34 +26,27 @@ class CollectionTest extends SapphireTest
         $collection = $this->objFromFixture(Collection::class, 'test');
         $collection->syncWithTypesenseServer();
     }
-
-    public function testBuildAndDeleteCollection()
+    public function testOneOffAddAndRemoveDocument()
     {
-        $this->markTestSkipped();
+        $client = Typesense::client();
         $collection = $this->objFromFixture(Collection::class, 'test');
-        $collection->write();
-        $this->assertTrue($collection->ID > 0);
-        $this->assertEquals($collection->ConnectionTimeout, 2);
-        $this->assertEquals($collection->ImportLimit, 10000);
-        $this->assertCount(3, $collection->Fields());
+        $this->assertTrue($client->collections[$collection->Name]->exists());
 
-        $field1 = $collection->Fields()->first();
-        $this->assertFalse((bool) $field1->facet);
-        $this->assertFalse((bool) $field1->optional);
-        $this->assertTrue((bool) $field1->index);
-        $this->assertTrue((bool) $field1->sort);
-        $this->assertTrue((bool) $field1->store);
-        $this->assertFalse((bool) $field1->infix);
+        $collectionResult = $client->collections[$collection->Name]->documents->search(['q' => '*']);
+        $this->assertEquals(0, $collectionResult['found']);
 
-        $this->assertCount(3, $collection->Fields());
+        $home = $this->objFromFixture(Page::class, 'home');
+        $home->publishRecursive();
 
-        $fieldsCount = Field::get();
-        $this->assertCount(3, $fieldsCount);
+        $collectionResult = $client->collections[$collection->Name]->documents->search(['q' => '*']);
+        $this->assertEquals(1, $collectionResult['found']);
 
-        $collection->delete();
-        $fieldsCount = Field::get();
-        $this->assertCount(0, $collection->Fields());
+        $home->doUnpublish();
+        $collectionResult = $client->collections[$collection->Name]->documents->search(['q' => '*']);
+        $this->assertEquals(0, $collectionResult['found']);
 
+        $home = $this->objFromFixture(Page::class, 'home');
+        $home->publishRecursive();
     }
 
     protected function tearDown(): void

@@ -432,4 +432,10 @@ class Collection extends DataObject
 
         return $data;
     }
+
+    public function checkExistance()
+    {
+        $client = Typesense::client();
+        return $client->collections[$this->Name]->exists();
+    }
 }
