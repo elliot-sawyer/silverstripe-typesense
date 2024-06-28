@@ -10,11 +10,15 @@ use Exception;
 use LeKoala\CmsActions\ActionButtonsGroup;
 use LeKoala\CmsActions\CustomAction;
 use LeKoala\CmsActions\SilverStripeIcons;
+use Page;
 use Psr\Log\LoggerInterface;
+use SilverStripe\CMS\Model\RedirectorPage;
+use SilverStripe\Core\ClassInfo;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Forms\CheckboxField;
 use SilverStripe\Forms\CompositeValidator;
 use SilverStripe\Forms\DropdownField;
+use SilverStripe\Forms\ListboxField;
 use SilverStripe\Forms\NumericField;
 use SilverStripe\Forms\ReadonlyField;
 use SilverStripe\Forms\RequiredFields;
@@ -38,7 +42,8 @@ class Collection extends DataObject
         'RecordClass' => 'Varchar(255)',
         'Enabled' => 'Boolean(1)',
         'ImportLimit' => 'Int(10000)',
-        'ConnectionTimeout' => 'Int(2)'
+        'ConnectionTimeout' => 'Int(2)',
+        'ExcludedClasses' => 'Text',
     ];
 
     private static $has_many = [
@@ -66,7 +71,7 @@ class Collection extends DataObject
     public function getCMSFields()
     {
         $fields = parent::getCMSFields();
-        $fields->removeByName(['Name','DefaultSortingField','TokenSeperators','SymbolsToIndex','RecordClass','Enabled', 'ImportLimit']);
+        $fields->removeByName(['Name','DefaultSortingField','TokenSeperators','SymbolsToIndex','RecordClass','Enabled', 'ImportLimit', 'ExcludedClasses']);
         $fields->addFieldsToTab('Root.Main', [
             TextField::create('Name')
                 ->setDescription('Name of the collection'),
@@ -93,8 +98,19 @@ class Collection extends DataObject
                 ->setDescription('This is the number of documents that can be uploaded into Typesense at once when the sync task is run.  This is usually adjusted for speed and memory reasons, for example if your collection is very large (2M records) or the indexing task is being run on a system with limited memory.'),
 
             NumericField::create('ConnectionTimeout')
-                ->setDescription('When syncing a large dataset to Typesense the connector can time out.  You can adjust this timeout limit as-needed.  The units are measure in seconds.')
+                ->setDescription('When syncing a large dataset to Typesense the connector can time out.  You can adjust this timeout limit as-needed.  The units are measure in seconds.'),
         ]);
+
+        if($this->ID && $this->RecordClass) {
+            $excludedClassesList = array_map(function($v) {
+                return ClassInfo::shortName($v);
+            }, ClassInfo::subclassesFor($this->RecordClass, false));
+
+            $fields->addFieldsToTab('Root.Main', [
+                ListboxField::create('ExcludedClasses', 'Excluded classes', $excludedClassesList)
+                ->setDescription("By default, all subclasses of the record class are indexed. To exclude any classes, define an array of them on excludedClasses"),
+            ]);
+        }
         return $fields;
     }
 
@@ -165,6 +181,12 @@ class Collection extends DataObject
         $collection->SymbolsToIndex = $collectionFields['symbols_to_index'] ?? null;
         $collection->ImportLimit = $collectionFields['import_limit'] ?? 10000;
         $collection->ConnectionTimeout = $collectionFields['connection_timeout'] ?? 2;
+
+        $excludedClasses = $collectionFields['excluded_classes'] ?? [];
+        $collection->ExcludedClasses = mb_strtolower(json_encode($excludedClasses));
+        // foreach($excludedClasses as $ec) {
+
+        // }
         $collection->write();
         foreach($collectionFields['fields'] as $fieldDefinition) {
             $field = Field::find_or_make($fieldDefinition, $collection->ID);
