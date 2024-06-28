@@ -15,6 +15,7 @@ use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Forms\CheckboxField;
 use SilverStripe\Forms\CompositeValidator;
 use SilverStripe\Forms\DropdownField;
+use SilverStripe\Forms\NumericField;
 use SilverStripe\Forms\ReadonlyField;
 use SilverStripe\Forms\RequiredFields;
 use SilverStripe\Forms\TextField;
@@ -27,7 +28,6 @@ use Typesense\Exceptions\ObjectAlreadyExists;
 
 class Collection extends DataObject
 {
-    private static $import_limit = 10000;
     private static $import_connection_timeout = 300;
     private static $table_name = 'TypesenseCollection';
     private static $db = [
@@ -37,7 +37,7 @@ class Collection extends DataObject
         'SymbolsToIndex' => 'Varchar(128)',
         'RecordClass' => 'Varchar(255)',
         'Enabled' => 'Boolean(1)',
-        // 'UpdateCollectionOnSync' => 'Boolean(1)'
+        'ImportLimit' => 'Int(10000)'
     ];
 
     private static $has_many = [
@@ -65,7 +65,7 @@ class Collection extends DataObject
     public function getCMSFields()
     {
         $fields = parent::getCMSFields();
-        $fields->removeByName(['Name','DefaultSortingField','TokenSeperators','SymbolsToIndex','RecordClass','Enabled']);
+        $fields->removeByName(['Name','DefaultSortingField','TokenSeperators','SymbolsToIndex','RecordClass','Enabled', 'ImportLimit']);
         $fields->addFieldsToTab('Root.Main', [
             TextField::create('Name')
                 ->setDescription('Name of the collection'),
@@ -86,7 +86,10 @@ class Collection extends DataObject
             ReadonlyField::create('RecordClass', 'Record class name')
                 ->setDescription('The Silverstripe class (and subclasses) of DataObjects contained in this collection.  TODO: Multiple objects are not yet supported'),
             CheckboxField::create('Enabled')
-                ->setDescription('When disabled, this collection will not be re-indexed. It is still available through the Typesense client. Do not rely on this for security.')
+                ->setDescription('When disabled, this collection will not be re-indexed. It is still available through the Typesense client. Do not rely on this for security.'),
+
+            NumericField::create('ImportLimit')
+                ->setDescription('This is the number of documents that can be uploaded into Typesense at once when the sync task is run.  This is usually adjusted for speed and memory reasons, for example if your collection is very large (2M records) or the indexing task is being run on a system with limited memory.')
         ]);
         return $fields;
     }
@@ -156,6 +159,7 @@ class Collection extends DataObject
         $collection->DefaultSortingField = $collectionFields['default_sorting_field'] ?? null;
         $collection->TokenSeperators = $collectionFields['token_separators'] ?? null;
         $collection->SymbolsToIndex = $collectionFields['symbols_to_index'] ?? null;
+        $collection->ImportLimit = $collectionFields['import_limit'] ?? 10000;
         $collection->write();
         foreach($collectionFields['fields'] as $fieldDefinition) {
             $field = Field::find_or_make($fieldDefinition, $collection->ID);
@@ -259,6 +263,17 @@ class Collection extends DataObject
         return $validator;
     }
 
+    public function onBeforeWrite()
+    {
+        parent::onBeforeWrite();
+        $importLimit = (int) $this->ImportLimit;
+        if($importLimit < 0) {
+            $importLimit = 1;
+        }
+
+        $this->ImportLimit = $importLimit;
+    }
+
     /**
      * Bulk load documents into Typesense
      *
@@ -268,7 +283,7 @@ class Collection extends DataObject
      */
     public function import()
     {
-        $limit = static::config()->import_limit;
+        $limit = (int) ($this->ImportLimit ?: 1);
         $connection_timeout = static::config()->import_connection_timeout;
         $client = Typesense::client($connection_timeout);
         $i = 0;
