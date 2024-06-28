@@ -202,7 +202,7 @@ class Collection extends DataObject
      *
      * @return array
      */
-    protected function FieldsArray() : array
+    public function FieldsArray() : array
     {
         $arr = [];
         foreach($this->Fields() as $field) {

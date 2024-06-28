@@ -1,0 +1,6 @@
+---
+Name: TypesenseCaching
+---
+SilverStripe\Core\Injector\Injector:
+  Psr\SimpleCache\CacheInterface.TypesenseCache:
+    factory: SilverStripe\Core\Cache\CacheFactory

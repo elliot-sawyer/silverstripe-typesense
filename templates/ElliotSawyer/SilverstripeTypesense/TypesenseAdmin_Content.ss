@@ -33,9 +33,8 @@
 	</div>
 
 
-    <div class="toolbar--south cms-content-actions cms-content-controls south" style="text-align:right; font-size:0.9em;">
-        Typesense Module - <a href="https://sawyer.nz" target="_blank">Elliot Sawyer</a> - LGPL3 With Attribution<br/>
-        Source code and license available at <a href="https://codeberg.org/0x/silverstripe-typesense" target="_new">Codeberg</a>
+    <div class="toolbar--south cms-content-actions cms-content-controls south text-right pt-3">
+        Typesense for Silverstripe • <a href="https://sawyer.nz" target="_blank">Elliot Sawyer</a> • LGPL3 With Attribution • Source code and license available at <a href="https://codeberg.org/0x/silverstripe-typesense" target="_new">Codeberg</a>
     </div>
 
 </div>
