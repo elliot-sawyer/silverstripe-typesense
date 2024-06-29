@@ -11,9 +11,16 @@ use SilverStripe\ORM\DB;
 
 class TypesenseSyncTask extends BuildTask
 {
-    public $title = 'Typesense sync task';
-    public $description = "Creates and indexes your Typesense collections";
     private static $segment = 'TypesenseSyncTask';
+    public function getTitle()
+    {
+        return _t(TypesenseSyncTask::class.'.TITLE');
+    }
+
+    public function getDescription()
+    {
+        return _t(TypesenseSyncTask::class.'.DESCRIPTION');
+    }
     public function run($request = null)
     {
         $copyright = (new Typesense())->CopyrightStatement();

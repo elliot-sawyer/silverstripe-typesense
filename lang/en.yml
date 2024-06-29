@@ -1,0 +1,66 @@
+en:
+  ElliotSawyer\SilverstripeTypesense\Collection:
+    CONFIRM_deleteFromTypesenseServer: 'You are about to delete your collection, are you sure?'
+    CONFIRM_syncWithTypesenseServer: 'This action will require a reindex, are you sure you want to continue?'
+    DESCRIPTION_ConnectionTimeout: 'When syncing a large dataset to Typesense the connector can time out.  You can adjust this timeout limit as-needed.  The units are measure in seconds.'
+    DESCRIPTION_DefaultSortingField: 'The name of an int32 / float field that determines the order in which the search results are ranked when a sort_by clause is not provided during searching. This field must indicate some kind of popularity. You cannot define a default sort on "auto" fields; it must be an explicitly defined field on your schema'
+    DESCRIPTION_Enabled: 'When disabled, this collection will not be re-indexed. It is still available through the Typesense client. Do not rely on this for security.'
+    DESCRIPTION_ExcludedClasses: 'By default, all subclasses of the record class are indexed. To exclude any classes, define an array of them on excludedClasses'
+    DESCRIPTION_ImportLimit: 'This is the number of documents that can be uploaded into Typesense at once when the sync task is run.  This is usually adjusted for speed and memory reasons, for example if your collection is very large (2M records) or the indexing task is being run on a system with limited memory.'
+    DESCRIPTION_Name: 'Name of the collection'
+    DESCRIPTION_RecordClass: 'The Silverstripe class (and subclasses) of DataObjects contained in this collection.  Only a single object type is supported.  To ensure data consistency it cannot be changed once set; you will need to delete the collection and build a new one'
+    DESCRIPTION_SymbolsToIndex: 'List of symbols or special characters to be indexed. For e.g. you can add + to this list to make the word c++ indexable verbatim. <a href="https://typesense.org/docs/guide/tips-for-searching-common-types-of-data.html" target="_new">More info</a>'
+    DESCRIPTION_TokenSeperators: 'List of symbols or special characters to be used for splitting the text into individual words in addition to space and new-line characters. For e.g. you can add - (hyphen) to this list to make a word like non-stick to be split on hyphen and indexed as two separate words. <a href="https://typesense.org/docs/guide/tips-for-searching-common-types-of-data.html" target="_new">More info</a>'
+    FIELDERROR_RecordClass: 'Invalid class'
+    IMPORT_AddedDocumentsToCollection: 'added [{limitcount} / {count}] documents to {name}'
+    IMPORT_Indexing: 'Indexing {name}, (Limit: {limit}, Timeout: {timeout}'
+    IMPORT_NoDocumentsFound: 'no documents found!'
+    LABEL_ConnectionTimeout: 'Connection timeout'
+    LABEL_DefaultSortingField: 'Default sorting field'
+    LABEL_Enabled: Enabled
+    LABEL_ExcludedClasses: 'Excluded classes'
+    LABEL_ImportLimit: 'Import limit'
+    LABEL_Name: Name
+    LABEL_RecordClass: 'Record class name'
+    LABEL_SymbolsToIndex: 'Symbols to index'
+    LABEL_TokenSeperators: 'Token seperators'
+    LABEL_deleteFromTypesenseServer: 'Delete from Typesense'
+    LABEL_syncWithTypesenseServer: 'Update collection in Typesense'
+    MESSAGE_deleteFromTypesenseServer: 'Collection {name} on Typesense server completed'
+    MESSAGE_syncWithTypesenseServer: 'Synchronization of {name} with Typesense completed'
+    PLURALNAME: Collections
+    PLURALS:
+      one: 'A Collection'
+      other: '{count} Collections'
+    SINGULARNAME: Collection
+  ElliotSawyer\SilverstripeTypesense\Field:
+    DESCRIPTION_facet: 'Enables faceting on the field. Default: false.'
+    DESCRIPTION_index: 'When set to false, the field will not be indexed in any in-memory index (e.g. search/sort/filter/facet). Default: true.'
+    DESCRIPTION_infix: 'When set to true, the field value can be infix-searched. Incurs significant memory overhead. Default: false.'
+    DESCRIPTION_name: 'Name of the field.'
+    DESCRIPTION_optional: 'When set to true, the field can have empty, null or missing values. Default: false.'
+    DESCRIPTION_sort: "When set to true, the field will be sortable. 'auto' fields cannot be sorted. Default: true for numbers, false otherwise."
+    DESCRIPTION_stem: "Stemming allows you to handle common word variations (singular / plurals, tense changes) of the same root word. For example: searching for walking, will also return results with walk, walked, walks, etc when stemming is enabled. This feature uses <a href='https://snowballstem.org/'>Snowball Stemmer</a>: language selection for stemmer is automatically made from the value of the locale property associated with the field (only 'en' is tested but other languages may work). Default: false"
+    DESCRIPTION_store: 'When set to false, the field value will not be stored on disk.  Default: true.'
+    DESCRIPTION_type: "The data type of the field. An explanation for each field is <a href='https://typesense.org/docs/26.0/api/collections.html#field-types' target='_new'>here</a>"
+    FIELDERROR_sort: 'Sorting on string[] and string* is not supported'
+    FIELDERROR_type: 'Invalid field type'
+    LABEL_facet: Facet
+    LABEL_index: Index
+    LABEL_infix: Infix
+    LABEL_name: Name
+    LABEL_optional: Optional
+    LABEL_sort: Sort
+    LABEL_stem: Stem
+    LABEL_store: Store
+    LABEL_type: Type
+    PLURALNAME: Fields
+    PLURALS:
+      one: 'A Field'
+      other: '{count} Fields'
+    SINGULARNAME: Field
+  ElliotSawyer\SilverstripeTypesense\TypesenseAdmin:
+    MENUTITLE: Typesense
+  ElliotSawyer\SilverstripeTypesense\TypesenseSyncTask:
+    DESCRIPTION: 'Creates and indexes your Typesense collections'
+    TITLE: 'Typesense sync task'

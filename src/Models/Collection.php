@@ -79,31 +79,31 @@ class Collection extends DataObject
 
     public function getCMSFields()
     {
-        $recordClassDescription = 'The Silverstripe class (and subclasses) of DataObjects contained in this collection.  Only a single object type is supported.  To ensure data consistency it cannot be changed once set; you will need to delete the collection and build a new one';
+        $recordClassDescription = _t(Collection::class.'.DESCRIPTION_RecordClass', 'The Silverstripe class (and subclasses) of DataObjects contained in this collection.  Only a single object type is supported.  To ensure data consistency it cannot be changed once set; you will need to delete the collection and build a new one');
         $fields = parent::getCMSFields();
 
         $fields->removeByName(['Name','DefaultSortingField','TokenSeperators','SymbolsToIndex','RecordClass','Enabled', 'ImportLimit', 'ConnectionTimeout', 'ExcludedClasses', 'Sort']);
         $fields->addFieldsToTab('Root.Main', [
-            TextField::create('Name')
-                ->setDescription('Name of the collection'),
+            TextField::create('Name', _t(Collection::class.'.LABEL_Name', 'Name'))
+                ->setDescription(_t(Collection::class.'.DESCRIPTION_Name', 'Name of the collection')),
 
-            TextField::create('TokenSeperators')
-                ->setDescription('List of symbols or special characters to be used for splitting the text into individual words in addition to space and new-line characters. For e.g. you can add - (hyphen) to this list to make a word like non-stick to be split on hyphen and indexed as two separate words. <a href="https://typesense.org/docs/guide/tips-for-searching-common-types-of-data.html" target="_new">More info</a>'),
+            TextField::create('TokenSeperators', _t(Collection::class.'.LABEL_TokenSeperators', 'Token seperators'))
+                ->setDescription(_t(Collection::class.'.DESCRIPTION_TokenSeperators', 'List of symbols or special characters to be used for splitting the text into individual words in addition to space and new-line characters. For e.g. you can add - (hyphen) to this list to make a word like non-stick to be split on hyphen and indexed as two separate words. <a href="https://typesense.org/docs/guide/tips-for-searching-common-types-of-data.html" target="_new">More info</a>')),
 
-            TextField::create('SymbolsToIndex')
-                ->setDescription('List of symbols or special characters to be indexed. For e.g. you can add + to this list to make the word c++ indexable verbatim. <a href="https://typesense.org/docs/guide/tips-for-searching-common-types-of-data.html" target="_new">More info</a>'),
+            TextField::create('SymbolsToIndex', _t(Collection::class.'.LABEL_SymbolsToIndex', 'Symbols to index'))
+                ->setDescription(_t(Collection::class.'.DESCRIPTION_SymbolsToIndex', 'List of symbols or special characters to be indexed. For e.g. you can add + to this list to make the word c++ indexable verbatim. <a href="https://typesense.org/docs/guide/tips-for-searching-common-types-of-data.html" target="_new">More info</a>')),
 
             DropdownField::create(
                 'DefaultSortingField',
-                'Default sorting field',
+                _t(Collection::class.'.LABEL_DefaultSortingField', 'Default sorting field'),
                 $this->Fields()
                     ->exclude('type', 'auto')
                     ->map('name', 'name'),
                 $this->DefaultSortingField
                 )->setHasEmptyDefault(true)
-                ->setDescription('The name of an int32 / float field that determines the order in which the search results are ranked when a sort_by clause is not provided during searching. This field must indicate some kind of popularity. You cannot define a default sort on "auto" fields; it must be an explicitly defined field on your schema'),
+                ->setDescription(_t(Collection::class.'.DESCRIPTION_DefaultSortingField', 'The name of an int32 / float field that determines the order in which the search results are ranked when a sort_by clause is not provided during searching. This field must indicate some kind of popularity. You cannot define a default sort on "auto" fields; it must be an explicitly defined field on your schema')),
 
-            TextField::create('RecordClass', 'Record class name')
+            TextField::create('RecordClass', _t(Collection::class.'.LABEL_RecordClass', 'Record class name'))
                 ->setDescription($recordClassDescription),
         ]);
 
@@ -114,20 +114,20 @@ class Collection extends DataObject
 
             $fields->addFieldsToTab('Root.Main', [
 
-                ReadonlyField::create('RecordClass', 'Record class name')
+                ReadonlyField::create('RecordClass', _t(Collection::class.'.LABEL_RecordClass', 'Record class name'))
                     ->setDescription($recordClassDescription),
 
-                CheckboxField::create('Enabled')
-                    ->setDescription('When disabled, this collection will not be re-indexed. It is still available through the Typesense client. Do not rely on this for security.'),
+                CheckboxField::create('Enabled', _t(Collection::class.'.LABEL_Enabled', 'Enabled'))
+                    ->setDescription(_t(Collection::class.'.DESCRIPTION_Enabled', 'When disabled, this collection will not be re-indexed. It is still available through the Typesense client. Do not rely on this for security.')),
 
-                NumericField::create('ImportLimit')
-                    ->setDescription('This is the number of documents that can be uploaded into Typesense at once when the sync task is run.  This is usually adjusted for speed and memory reasons, for example if your collection is very large (2M records) or the indexing task is being run on a system with limited memory.'),
+                NumericField::create('ImportLimit', _t(Collection::class.'.LABEL_ImportLimit', 'Import limit'))
+                    ->setDescription(_t(Collection::class.'.DESCRIPTION_ImportLimit', 'This is the number of documents that can be uploaded into Typesense at once when the sync task is run.  This is usually adjusted for speed and memory reasons, for example if your collection is very large (2M records) or the indexing task is being run on a system with limited memory.')),
 
-                NumericField::create('ConnectionTimeout')
-                    ->setDescription('When syncing a large dataset to Typesense the connector can time out.  You can adjust this timeout limit as-needed.  The units are measure in seconds.'),
+                NumericField::create('ConnectionTimeout', _t(Collection::class.'.LABEL_ConnectionTimeout', 'Connection timeout'))
+                    ->setDescription(_t(Collection::class.'.DESCRIPTION_ConnectionTimeout', 'When syncing a large dataset to Typesense the connector can time out.  You can adjust this timeout limit as-needed.  The units are measure in seconds.')),
 
-                ListboxField::create('ExcludedClasses', 'Excluded classes', $excludedClassesList)
-                    ->setDescription("By default, all subclasses of the record class are indexed. To exclude any classes, define an array of them on excludedClasses"),
+                ListboxField::create('ExcludedClasses', _t(Collection::class.'.LABEL_ExcludedClasses', 'Excluded classes'), $excludedClassesList)
+                    ->setDescription(_t(Collection::class.'.DESCRIPTION_ExcludedClasses', "By default, all subclasses of the record class are indexed. To exclude any classes, define an array of them on excludedClasses")),
             ]);
         }
         return $fields;
@@ -138,17 +138,16 @@ class Collection extends DataObject
         $actions = parent::getCMSActions();
 
         $typesenseActions = [
-            CustomAction::create("syncWithTypesenseServer", "Update collection in Typesense")
-                ->setAttribute('title', 'This action will require a reindex')
+            CustomAction::create("syncWithTypesenseServer", _t(Collection::class.'.LABEL_syncWithTypesenseServer', "Update collection in Typesense"))
                 ->removeExtraClass('btn-info')
                 ->addExtraClass('btn-outline-danger')
                 ->setButtonIcon(SilverStripeIcons::ICON_SYNC)
-                ->setConfirmation('This action will require a reindex, are you sure you want to continue?'),
-            CustomAction::create("deleteFromTypesenseServer", "Delete from Typesense")
+                ->setConfirmation(_t(Collection::class.'.CONFIRM_syncWithTypesenseServer', 'This action will require a reindex, are you sure you want to continue?')),
+            CustomAction::create("deleteFromTypesenseServer", _t(Collection::class.'.LABEL_deleteFromTypesenseServer', "Delete from Typesense"))
                 ->removeExtraClass('btn-info')
                 ->addExtraClass('btn-outline-danger')
                 ->setButtonIcon(SilverStripeIcons::ICON_TRASH_BIN)
-                ->setConfirmation('You are about to delete your collection, are you sure?')
+                ->setConfirmation(_t(Collection::class.'.CONFIRM_deleteFromTypesenseServer','You are about to delete your collection, are you sure?'))
         ];
 
         $groupAction = ActionButtonsGroup::create($typesenseActions);
@@ -164,13 +163,13 @@ class Collection extends DataObject
     public function syncWithTypesenseServer(): string
     {
         $this->__createOrUpdateOnServer();
-        return 'Synchronization of '.$this->Name.' with Typesense completed';
+        return _t(Collection::class.'.MESSAGE_syncWithTypesenseServer', 'Synchronization of {name} with Typesense completed', ['name' => $this->Name]);
     }
 
     public function deleteFromTypesenseServer(): string
     {
         $this->__deleteOnServer();
-        return 'Collection' .($this->ID ? $this->Name : ''). ' on Typesense server completed';
+        return _t(Collection::class.'.MESSAGE_deleteFromTypesenseServer', 'Collection {name} on Typesense server completed', ['name', ($this->ID ? $this->Name : '')]);
     }
 
     public function onAfterBuild()
@@ -310,7 +309,7 @@ class Collection extends DataObject
     {
         $valid = parent::validate();
         if(!class_exists($this->RecordClass)) {
-            $valid->addFieldError('RecordClass', 'Invalid class');
+            $valid->addFieldError('RecordClass', _t(Collection::class.'.FIELDERROR_RecordClass', 'Invalid class'));
         }
         return $valid;
     }
@@ -343,9 +342,14 @@ class Collection extends DataObject
         $client = Typesense::client($connection_timeout);
         $i = 0;
         $count = $this->getRecordsCount();
-        DB::alteration_message(sprintf("Indexing %s (Limit: %d, Timeout: %d)", $this->Name, $limit, $connection_timeout));
+        DB::alteration_message(
+            _t(Collection::class.'.IMPORT_Indexing', "Indexing {name}, (Limit: {limit}, Timeout: {timeout}", ['name' => $this->Name, 'limit' => $limit, 'timeout' => $connection_timeout])
+        );
         if($count === 0) {
-            DB::alteration_message('... no documents found!');
+            DB::alteration_message(
+                '...'
+                ._t(Collection::class.'.IMPORT_NoDocumentsFound', 'no documents found!')
+            );
         }
         while($records = $this->getRecords()->limit($limit, $i)) {
             $limitCount = $records->count();
@@ -366,7 +370,10 @@ class Collection extends DataObject
             }
 
             $client->collections[$this->Name]->documents->import($docs, ['action' => 'emplace']);
-            DB::alteration_message(sprintf("... added [%d / %d] documents to %s", $i + $limitCount, $count, $this->Name));
+            DB::alteration_message(
+                '...'
+                ._t(Collection::class.'.IMPORT_AddedDocumentsToCollection', 'added [{limitcount} / {count}] documents to {name}', ['limitcount' => $i + $limitCount, 'count' => $count, 'name' => $this->Name])
+            );
 
             $i += $limit;
         }

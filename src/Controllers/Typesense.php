@@ -40,7 +40,11 @@ final class Typesense extends Controller
             $connection_timeout = self::config()->connection_timeout;
         }
         $server = self::parse_typesense_server();
-        if(!$server) throw new Exception('TYPESENSE_SERVER must be in scheme://host:port format');
+        if(!$server) {
+            throw new Exception(
+                _t(self::class.'.EXCEPTION_schemeformat', 'TYPESENSE_SERVER must be in scheme://host:port format')
+            );
+        }
 
         $localhost = $server['host'] ?? 'localhost';
         $localport = $server['port'] ?? 8081;

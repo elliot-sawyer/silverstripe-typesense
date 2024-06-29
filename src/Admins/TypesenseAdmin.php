@@ -8,6 +8,7 @@ namespace ElliotSawyer\SilverstripeTypesense;
 
 use SilverStripe\Admin\LeftAndMain;
 use SilverStripe\Admin\ModelAdmin;
+use SilverStripe\CMS\Controllers\CMSMain;
 use SilverStripe\Forms\GridField\GridFieldConfig;
 use SilverStripe\Security\PermissionProvider;
 use Symbiote\GridFieldExtensions\GridFieldOrderableRows;
@@ -27,11 +28,11 @@ class TypesenseAdmin extends ModelAdmin implements PermissionProvider
 
     public function providePermissions()
     {
-        $title = _t('TypesenseAdmin.MENUTITLE', LeftAndMain::menu_title('TypesenseAdmin'));
+        $title = _t(TypesenseAdmin::class.'.MENUTITLE', LeftAndMain::menu_title('TypesenseAdmin'));
 
         return [
             'CMS_ACCESS_TYPESENSEADMIN' => [
-                'name' => _t('CMSMain.ACCESS', "Access to '{title}' section", 'Permissions Label', ['title' => $title]),
+                'name' => _t(CMSMain::class.'.ACCESS', "Access to '{title}' section", 'Permissions Label', ['title' => $title]),
                 'category' => $title,
                 'help' => 'Allow use of the Typesense Administration area',
             ],
