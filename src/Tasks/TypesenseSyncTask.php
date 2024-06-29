@@ -12,22 +12,27 @@ use SilverStripe\ORM\DB;
 class TypesenseSyncTask extends BuildTask
 {
     public $title = 'Typesense sync task';
-    public $description = "Creates your typesense collections, and ... (TODO: does the actual indexing)";
+    public $description = "Creates and indexes your Typesense collections";
     private static $segment = 'TypesenseSyncTask';
     public function run($request = null)
     {
         $copyright = (new Typesense())->CopyrightStatement();
         DB::alteration_message($copyright);
-
         $client = Typesense::client();
+        $this->extend('onBeforeBuildAllCollections');
         $collections = $this->findOrMakeAllCollections();
+        $this->extend('onAfterBuildAllCollections', $collections);
         if(!$collections) return;
+
+        $this->extend('onBeforeImportDocuments');
         foreach($collections as $collection) {
             if(!$client->collections[$collection->Name]->exists()) {
                 DB::alteration_message($collection->syncWithTypesenseServer());
             }
             $collection->import();
         }
+        $this->extend('onAfterImportDocuments', $collections);
+        $this->extend('onEndOfSyncTask');
     }
 
     private function findOrMakeAllCollections()
