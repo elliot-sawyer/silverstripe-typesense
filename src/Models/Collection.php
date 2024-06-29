@@ -10,10 +10,7 @@ use Exception;
 use LeKoala\CmsActions\ActionButtonsGroup;
 use LeKoala\CmsActions\CustomAction;
 use LeKoala\CmsActions\SilverStripeIcons;
-use Page;
 use Psr\Log\LoggerInterface;
-use SilverStripe\Assets\File;
-use SilverStripe\CMS\Model\RedirectorPage;
 use SilverStripe\Core\ClassInfo;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Forms\CheckboxField;
@@ -34,7 +31,6 @@ use Typesense\Exceptions\ObjectAlreadyExists;
 
 class Collection extends DataObject
 {
-    private static $import_connection_timeout = 300;
     private static $table_name = 'TypesenseCollection';
     private static $db = [
         'Name' => 'Varchar(64)',
@@ -54,6 +50,8 @@ class Collection extends DataObject
 
     private static $summary_fields = [
         'Name',
+        'ImportLimit',
+        'ConnectionTimeout',
         'DefaultSortingField',
         'TokenSeperators',
         'SymbolsToIndex',
@@ -82,6 +80,18 @@ class Collection extends DataObject
     {
         $recordClassDescription = 'The Silverstripe class (and subclasses) of DataObjects contained in this collection.  Only a single object type is supported.  To ensure data consistency it cannot be changed once set; you will need to delete the collection and build a new one';
         $fields = parent::getCMSFields();
+
+        $defaultSortingField = $this->Fields()->find('type', 'auto')
+            ?   TextField::create('DefaultSortingField', 'Default sorting field')
+            :   DropdownField::create(
+                    'DefaultSortingField',
+                    'Default sorting field',
+                    $this->Fields()->map('name', 'name'),
+                    $this->DefaultSortingField
+                )->setHasEmptyDefault(true);
+        $defaultSortingField
+            ->setDescription('The name of an int32 / float field that determines the order in which the search results are ranked when a sort_by clause is not provided during searching. This field must indicate some kind of popularity. ');
+
         $fields->removeByName(['Name','DefaultSortingField','TokenSeperators','SymbolsToIndex','RecordClass','Enabled', 'ImportLimit', 'ConnectionTimeout', 'ExcludedClasses']);
         $fields->addFieldsToTab('Root.Main', [
             TextField::create('Name')
@@ -93,13 +103,8 @@ class Collection extends DataObject
             TextField::create('SymbolsToIndex')
                 ->setDescription('List of symbols or special characters to be indexed. For e.g. you can add + to this list to make the word c++ indexable verbatim. <a href="https://typesense.org/docs/guide/tips-for-searching-common-types-of-data.html" target="_new">More info</a>'),
 
-            DropdownField::create(
-                'DefaultSortingField',
-                'Default sorting field',
-                $this->Fields()->map('name', 'name'),
-                $this->DefaultSortingField
-            )->setHasEmptyDefault(true)
-                ->setDescription('The name of an int32 / float field that determines the order in which the search results are ranked when a sort_by clause is not provided during searching. This field must indicate some kind of popularity. '),
+            $defaultSortingField,
+
             TextField::create('RecordClass', 'Record class name')
                 ->setDescription($recordClassDescription),
         ]);
@@ -335,12 +340,12 @@ class Collection extends DataObject
      */
     public function import(): void
     {
-        $limit = (int) ($this->ImportLimit ?: 1);
+        $limit = (int) ($this->ImportLimit ?: 10000);
         $connection_timeout = (int) $this->ConnectionTimeout ?: 2;
         $client = Typesense::client($connection_timeout);
         $i = 0;
         $count = $this->getRecordsCount();
-        DB::alteration_message(sprintf("Indexing %s", $this->Name));
+        DB::alteration_message(sprintf("Indexing %s (Limit: %d, Timeout: %d)", $this->Name, $limit, $connection_timeout));
         if($count === 0) {
             DB::alteration_message('... no documents found!');
         }

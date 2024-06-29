@@ -40,7 +40,9 @@ class TypesenseSyncTask extends BuildTask
             $dbCollection = Collection::find_or_make($collectionName, $recordClass, $collection);
 
         }
-        $indexes = Collection::get();
+        $indexes = Collection::get()->filter([
+            'Enabled' => true
+        ]);
         return $indexes;
     }
 }

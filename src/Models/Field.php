@@ -99,8 +99,8 @@ class Field extends DataObject {
             CheckboxField::create('facet')->setDescription("Enables faceting on the field. Default: false."),
             CheckboxField::create('optional')->setDescription("When set to true, the field can have empty, null or missing values. Default: false."),
             CheckboxField::create('index')->setDescription("When set to false, the field will not be indexed in any in-memory index (e.g. search/sort/filter/facet). Default: true."),
-            CheckboxField::create('sort')->setDescription("When set to false, the field value will not be stored on disk. Default: true."),
-            CheckboxField::create('store')->setDescription("When set to true, the field will be sortable. Default: true for numbers, false otherwise."),
+            CheckboxField::create('sort')->setDescription("When set to true, the field will be sortable. 'auto' fields cannot be sorted. Default: true for numbers, false otherwise."),
+            CheckboxField::create('store')->setDescription("When set to false, the field value will not be stored on disk.  Default: true."),
             CheckboxField::create('infix')->setDescription("When set to true, the field value can be infix-searched. Incurs significant memory overhead. Default: false."),
         ]);
         return $fields;
@@ -124,5 +124,16 @@ class Field extends DataObject {
         }
 
         return $field;
+    }
+
+    public function onBeforeWrite()
+    {
+        parent::onBeforeWrite();
+        if($this->type = 'auto') {
+            $this->sort = false;
+            if($this->facet == true) {
+                $this->optional = true;
+            }
+        }
     }
 }
