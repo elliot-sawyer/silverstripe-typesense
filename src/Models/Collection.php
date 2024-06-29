@@ -81,17 +81,6 @@ class Collection extends DataObject
         $recordClassDescription = 'The Silverstripe class (and subclasses) of DataObjects contained in this collection.  Only a single object type is supported.  To ensure data consistency it cannot be changed once set; you will need to delete the collection and build a new one';
         $fields = parent::getCMSFields();
 
-        $defaultSortingField = $this->Fields()->find('type', 'auto')
-            ?   TextField::create('DefaultSortingField', 'Default sorting field')
-            :   DropdownField::create(
-                    'DefaultSortingField',
-                    'Default sorting field',
-                    $this->Fields()->map('name', 'name'),
-                    $this->DefaultSortingField
-                )->setHasEmptyDefault(true);
-        $defaultSortingField
-            ->setDescription('The name of an int32 / float field that determines the order in which the search results are ranked when a sort_by clause is not provided during searching. This field must indicate some kind of popularity. ');
-
         $fields->removeByName(['Name','DefaultSortingField','TokenSeperators','SymbolsToIndex','RecordClass','Enabled', 'ImportLimit', 'ConnectionTimeout', 'ExcludedClasses']);
         $fields->addFieldsToTab('Root.Main', [
             TextField::create('Name')
@@ -103,7 +92,15 @@ class Collection extends DataObject
             TextField::create('SymbolsToIndex')
                 ->setDescription('List of symbols or special characters to be indexed. For e.g. you can add + to this list to make the word c++ indexable verbatim. <a href="https://typesense.org/docs/guide/tips-for-searching-common-types-of-data.html" target="_new">More info</a>'),
 
-            $defaultSortingField,
+            DropdownField::create(
+                'DefaultSortingField',
+                'Default sorting field',
+                $this->Fields()
+                    ->exclude('type', 'auto')
+                    ->map('name', 'name'),
+                $this->DefaultSortingField
+                )->setHasEmptyDefault(true)
+                ->setDescription('The name of an int32 / float field that determines the order in which the search results are ranked when a sort_by clause is not provided during searching. This field must indicate some kind of popularity. You cannot define a default sort on "auto" fields; it must be an explicitly defined field on your schema'),
 
             TextField::create('RecordClass', 'Record class name')
                 ->setDescription($recordClassDescription),

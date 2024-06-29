@@ -57,7 +57,7 @@ class Field extends DataObject {
         // 'vec_dist' => 'Enum("cosine,ip","cosine")',
         // 'reference' => 'Varchar(255)',
         // 'range_index' => 'Boolean(0)',
-        // 'stem' => 'Boolean(0)',
+        'stem' => 'Boolean(0)',
     ];
 
     private static $has_one = [
@@ -73,6 +73,7 @@ class Field extends DataObject {
         'optional.Nice' => 'Optional',
         'sort.Nice' => 'Sort',
         'infix.Nice' => 'Infix',
+        'stem.Nice' => 'Stemming',
     ];
 
     private static $defaults = [
@@ -82,6 +83,7 @@ class Field extends DataObject {
         'sort' => true,
         'store' => true,
         'infix' => false,
+        'stem' => 0,
     ];
 
     public function getCMSFields()
@@ -102,6 +104,7 @@ class Field extends DataObject {
             CheckboxField::create('sort')->setDescription("When set to true, the field will be sortable. 'auto' fields cannot be sorted. Default: true for numbers, false otherwise."),
             CheckboxField::create('store')->setDescription("When set to false, the field value will not be stored on disk.  Default: true."),
             CheckboxField::create('infix')->setDescription("When set to true, the field value can be infix-searched. Incurs significant memory overhead. Default: false."),
+            CheckboxField::create('stem')->setDescription("Stemming allows you to handle common word variations (singular / plurals, tense changes) of the same root word. For example: searching for walking, will also return results with walk, walked, walks, etc when stemming is enabled. This feature uses <a href='https://snowballstem.org/'>Snowball Stemmer</a>: language selection for stemmer is automatically made from the value of the locale property associated with the field (only 'en' is tested but other languages may work). Default: false"),
         ]);
         return $fields;
     }
@@ -110,7 +113,11 @@ class Field extends DataObject {
     {
         $valid = parent::validate();
         if(!in_array($this->type, $this->config()->field_types)) {
-            $valid->addError('Invalid field type');
+            $valid->addFieldError('type', 'Invalid field type');
+        }
+
+        if($this->type == 'string[]' && $this->sort == true) {
+            $valid->addFieldError('sort', 'Sorting on string[] and string* is not supported');
         }
         return $valid;
     }
@@ -131,9 +138,12 @@ class Field extends DataObject {
         parent::onBeforeWrite();
         if($this->type == 'auto') {
             $this->sort = false;
-            if($this->facet == true) {
-                $this->optional = true;
-            }
+        }
+        if($this->facet == true) {
+            $this->optional = true;
+        }
+        if($this->type == 'string*' || $this->type == 'string[]' ) {
+            $this->sort = false;
         }
     }
 }
