@@ -169,7 +169,7 @@ class Collection extends DataObject
     public function deleteFromTypesenseServer(): string
     {
         $this->__deleteOnServer();
-        return _t(Collection::class.'.MESSAGE_deleteFromTypesenseServer', 'Collection {name} on Typesense server completed', ['name', ($this->ID ? $this->Name : '')]);
+        return _t(Collection::class.'.MESSAGE_deleteFromTypesenseServer', 'Collection {name} on Typesense server completed', ['name' => ($this->ID ? $this->Name : '')]);
     }
 
     public function onAfterBuild()

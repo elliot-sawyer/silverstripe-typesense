@@ -14,12 +14,12 @@ class TypesenseSyncTask extends BuildTask
     private static $segment = 'TypesenseSyncTask';
     public function getTitle()
     {
-        return _t(TypesenseSyncTask::class.'.TITLE');
+        return _t(TypesenseSyncTask::class.'.TITLE', 'Typesense sync task');
     }
 
     public function getDescription()
     {
-        return _t(TypesenseSyncTask::class.'.DESCRIPTION');
+        return _t(TypesenseSyncTask::class.'.DESCRIPTION', 'Creates and indexes your Typesense collections');
     }
     public function run($request = null)
     {

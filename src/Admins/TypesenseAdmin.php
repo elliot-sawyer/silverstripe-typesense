@@ -10,6 +10,9 @@ use SilverStripe\Admin\LeftAndMain;
 use SilverStripe\Admin\ModelAdmin;
 use SilverStripe\CMS\Controllers\CMSMain;
 use SilverStripe\Forms\GridField\GridFieldConfig;
+use SilverStripe\Forms\GridField\GridFieldExportButton;
+use SilverStripe\Forms\GridField\GridFieldImportButton;
+use SilverStripe\Forms\GridField\GridFieldPrintButton;
 use SilverStripe\Security\PermissionProvider;
 use Symbiote\GridFieldExtensions\GridFieldOrderableRows;
 
@@ -43,7 +46,10 @@ class TypesenseAdmin extends ModelAdmin implements PermissionProvider
     {
         $cfg = parent::getGridFieldConfig();
         if($this->modelClass == Collection::class) {
-            $cfg->addComponent(GridFieldOrderableRows::create());
+            $cfg->addComponent(GridFieldOrderableRows::create())
+                ->removeComponentsByType(GridFieldExportButton::class)
+                ->removeComponentsByType(GridFieldImportButton::class)
+                ->removeComponentsByType(GridFieldPrintButton::class);
         }
         return $cfg;
     }
