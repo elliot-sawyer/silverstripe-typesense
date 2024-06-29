@@ -389,7 +389,9 @@ class Collection extends DataObject
 
         if($this->ExcludedClasses) {
             $excludedClasses = json_decode($this->ExcludedClasses, true);
-            $records = $records->exclude('ClassName', array_values($excludedClasses));
+            if($excludedClasses) {
+                $records = $records->exclude('ClassName', array_values($excludedClasses));
+            }
         }
 
         return $records;
