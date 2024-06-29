@@ -129,7 +129,7 @@ class Field extends DataObject {
     public function onBeforeWrite()
     {
         parent::onBeforeWrite();
-        if($this->type = 'auto') {
+        if($this->type == 'auto') {
             $this->sort = false;
             if($this->facet == true) {
                 $this->optional = true;
