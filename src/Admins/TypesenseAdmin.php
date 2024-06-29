@@ -8,7 +8,9 @@ namespace ElliotSawyer\SilverstripeTypesense;
 
 use SilverStripe\Admin\LeftAndMain;
 use SilverStripe\Admin\ModelAdmin;
+use SilverStripe\Forms\GridField\GridFieldConfig;
 use SilverStripe\Security\PermissionProvider;
+use Symbiote\GridFieldExtensions\GridFieldOrderableRows;
 
 class TypesenseAdmin extends ModelAdmin implements PermissionProvider
 {
@@ -34,5 +36,14 @@ class TypesenseAdmin extends ModelAdmin implements PermissionProvider
                 'help' => 'Allow use of the Typesense Administration area',
             ],
         ];
+    }
+
+    public function getGridfieldConfig(): GridFieldConfig
+    {
+        $cfg = parent::getGridFieldConfig();
+        if($this->modelClass == Collection::class) {
+            $cfg->addComponent(GridFieldOrderableRows::create());
+        }
+        return $cfg;
     }
 }

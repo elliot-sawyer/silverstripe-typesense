@@ -42,6 +42,7 @@ class Collection extends DataObject
         'ImportLimit' => 'Int(10000)',
         'ConnectionTimeout' => 'Int(2)',
         'ExcludedClasses' => 'Text',
+        'Sort' => 'Int',
     ];
 
     private static $has_many = [
@@ -74,14 +75,14 @@ class Collection extends DataObject
 
     private static $cascade_deletes = ['Fields'];
 
-
+    private static $default_sort = 'Sort ASC';
 
     public function getCMSFields()
     {
         $recordClassDescription = 'The Silverstripe class (and subclasses) of DataObjects contained in this collection.  Only a single object type is supported.  To ensure data consistency it cannot be changed once set; you will need to delete the collection and build a new one';
         $fields = parent::getCMSFields();
 
-        $fields->removeByName(['Name','DefaultSortingField','TokenSeperators','SymbolsToIndex','RecordClass','Enabled', 'ImportLimit', 'ConnectionTimeout', 'ExcludedClasses']);
+        $fields->removeByName(['Name','DefaultSortingField','TokenSeperators','SymbolsToIndex','RecordClass','Enabled', 'ImportLimit', 'ConnectionTimeout', 'ExcludedClasses', 'Sort']);
         $fields->addFieldsToTab('Root.Main', [
             TextField::create('Name')
                 ->setDescription('Name of the collection'),
