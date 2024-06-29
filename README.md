@@ -1,6 +1,20 @@
-# silverstripe-typesense
+# Typesense Search for Silverstripe
 
-New home for the Silverstripe Typesense project
+Typesense is lightning-fast, open source search - no PhD required!  It is an open source alternative to Algolia and an easier-to-use alternative to ElasticSearch and Solr. It offers fast, typo-tolerant, in-memory fuzzy search for building delightful search experiences.
+
+* https://typesense.org/
+* https://github.com/typesense/typesense
+
+This module was created to create a searchable Silverstripe website using Typesense for indexing.  It provides highly performant, nearly-instant, and often sub-millisecond response times. 
+
+Typesense supports:
+
+* Faceting
+* Sorting
+* Curated searches
+* Synonyms
+* Machine learning and GPU-enhanced searches
+* Automatic schema detection
 
 ## Installation
 
