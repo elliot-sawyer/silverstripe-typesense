@@ -1,3 +1,0 @@
-SilverStripe\ORM\DataObject:
-  extensions:
-    - ElliotSawyer\SilverstripeTypesense\DocumentUpdate

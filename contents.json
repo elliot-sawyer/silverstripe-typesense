@@ -59,8 +59,8 @@
     {
       "path": "03-installation.md",
       "url": "03-installation.html",
-      "content": "## Installation\n\nAdd this to your composer.json:\n\n```json\n    \"repositories\": {\n        \"elliot-sawyer/silverstripe-typesense\": {\n            \"type\": \"vcs\",\n            \"url\": \"git@codeberg.org:0x/silverstripe-typesense.git\"\n        }\n    },\n```\n\nThen run `composer require elliot-sawyer/silverstripe-typesense`.\n\nThe repositories step is not necessary once the module is public.\n\n",
-      "html": "<h2 id=\"installation\">Installation <a class=\"heading-anchor-permalink\" href=\"#installation\">#</a></h2>\n<p>Add this to your composer.json:</p>\n<pre><code class=\"language-json\">    &quot;repositories&quot;: {\n        &quot;elliot-sawyer/silverstripe-typesense&quot;: {\n            &quot;type&quot;: &quot;vcs&quot;,\n            &quot;url&quot;: &quot;git@codeberg.org:0x/silverstripe-typesense.git&quot;\n        }\n    },\n</code></pre>\n<p>Then run <code>composer require elliot-sawyer/silverstripe-typesense</code>.</p>\n<p>The repositories step is not necessary once the module is public.</p>\n",
+      "content": "## Installation\n\n`composer require elliot-sawyer/silverstripe-typesense`.\n\nFor development or forks, add this to your composer.json\n\n```json\n    \"repositories\": {\n        \"elliot-sawyer/silverstripe-typesense\": {\n            \"type\": \"vcs\",\n            \"url\": \"git@codeberg.org:0x/silverstripe-typesense.git\"\n        }\n    },\n```\n",
+      "html": "<h2 id=\"installation\">Installation <a class=\"heading-anchor-permalink\" href=\"#installation\">#</a></h2>\n<p><code>composer require elliot-sawyer/silverstripe-typesense</code>.</p>\n<p>For development or forks, add this to your composer.json</p>\n<pre><code class=\"language-json\">    &quot;repositories&quot;: {\n        &quot;elliot-sawyer/silverstripe-typesense&quot;: {\n            &quot;type&quot;: &quot;vcs&quot;,\n            &quot;url&quot;: &quot;git@codeberg.org:0x/silverstripe-typesense.git&quot;\n        }\n    },\n</code></pre>\n",
       "id": 2
     },
     {
