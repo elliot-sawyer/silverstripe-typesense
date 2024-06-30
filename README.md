@@ -53,5 +53,3 @@ Like my work? Consider shouting me a coffee or a small donation if this module h
 * Litecoin: LbyhaTESx3uQvwwd9So4sGSpi4tTJLKBdz
 
 Paid support is available. Please get in touch at https://sawyer.nz/contact
-
-
