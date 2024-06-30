@@ -1,6 +1,6 @@
 # Typesense Search for Silverstripe
 
-| [![Supercharge Your Search With Typesense](http://img.youtube.com/vi/3ovkP2u4lbY/0.jpg)](http://www.youtube.com/watch?v=3ovkP2u4lbY "Supercharge Your Search With Typesense") | ![A demo embedded on the Typesense homepage](/docs/img/ts-docs.webp "A demo embedded on the Typesense homepage")  |
+| [![Supercharge Your Search With Typesense](http://img.youtube.com/vi/3ovkP2u4lbY/0.jpg)](http://www.youtube.com/watch?v=3ovkP2u4lbY "Supercharge Your Search With Typesense") | ![A demo embedded on the Typesense homepage](docs/img/ts-docs.webp "A demo embedded on the Typesense homepage")  |
 | -------- | ------- |
 
 Typesense is lightning-fast, open source search - no PhD required!  It is an open source alternative to Algolia and an easier-to-use alternative to ElasticSearch and Solr. It offers fast, typo-tolerant, in-memory fuzzy search for building delightful search experiences.
@@ -24,17 +24,17 @@ Typesense supports:
 
 ## Documentation
 
-* [Development](docs/en/development.md)
-* [Installation](docs/en/installation.md)
-* [Configuration](docs/en/configuration.md)
-* [Managing Collections and Fields](docs/en/collections.md)
-* [Syncing](docs/en/syncing.md)
-* [How to search](docs/en/searching.md)
-* [Troubleshooting](docs/en/troubleshooting.md)
+* [Development](docs/02-development.md)
+* [Installation](docs/03-installation.md)
+* [Configuration](docs/04-configuration.md)
+* [Managing Collections and Fields](05-docs/collections.md)
+* [Syncing](docs/06-syncing.md)
+* [How to search](docs/07-searching.md)
+* [Troubleshooting](docs/08-troubleshooting.md)
 
 ## Copyright statements
 
-This software includes contributions from Elliot Sawyer, available under the LGPL3 license (with attribution). This attribution statement is required to be shipped with the module, and is displayed within your application. These will appear in certain areas of your application where the module is being used.
+This software includes contributions from Elliot Sawyer, available under the [LGPL3-With-Attribution license](https://codeberg.org/0x/silverstripe-typesense/src/branch/pages/LICENSE.md). This attribution statement is required to be shipped with the module, and is displayed within your application. These will appear in certain areas of your application where the module is being used.
 
 ## Support
 
@@ -43,3 +43,5 @@ Like my work? Consider shouting me a coffee or a small donation if this module h
 * Bitcoin: 12gSxkqVNr9QMLQMMJdWemBaRRNPghmS3p
 * Bitcoin Cash: 1QETPtssFRM981TGjVg74uUX8kShcA44ni
 * Litecoin: LbyhaTESx3uQvwwd9So4sGSpi4tTJLKBdz
+
+Paid support is available. Please get in touch at https://sawyer.nz/contact
