@@ -4,6 +4,8 @@
 
 **Repository**: https://codeberg.org/0x/silverstripe-typesense
 
+**Docs**: https://0x.codeberg.page/silverstripe-typesense/
+
 | [![Supercharge Your Search With Typesense](http://img.youtube.com/vi/3ovkP2u4lbY/0.jpg)](http://www.youtube.com/watch?v=3ovkP2u4lbY "Supercharge Your Search With Typesense") | ![A demo embedded on the Typesense homepage](img/ts-docs.webp "A demo embedded on the Typesense homepage")  |
 | -------- | ------- |
 
