@@ -1,5 +1,5 @@
 {
-    "name": "elliot-sawyer/silverstripe-typesense",
+    "name": "elliotsawyer/silverstripe-typesense",
     "description": "Typesense is Lightning-fast, Open Source Search. No PhD required. Open Source alternative to Algolia + Pinecone + and an Easier-to-Use alternative to ElasticSearch and Solr. Fast, typo tolerant, in-memory fuzzy Search Engine for building delightful search experiences. This enables Silverstripe to work with Typesense collections",
     "type": "vendor-plugin",
     "require": {
