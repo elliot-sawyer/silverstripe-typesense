@@ -37,11 +37,11 @@ When the task `TypesenseSyncTask` is run, all collections defined in this YML wi
 
 ### Configuring your collection
 
-![A new unsaved collection](../img/cms-collections-new.png "A new unsaved collection")
+![A new unsaved collection](img/cms-collections-new.png "A new unsaved collection")
 
 The only fields that are required here are `name` and the `fields` array. `excludedClasses` is used when you want to exclude a particular subclass from being indexed (for example, error pages, redirectors, and other pages that may not have any searchable content).
 
-These fields are also optional.  They affect how the collection indexes content and the order of the results.  More information of these fields can be found [here](https://typesense.org../26.0/api/collections.html#schema-parameters).
+These fields are also optional.  They affect how the collection indexes content and the order of the results.  More information of these fields can be found [here](https://typesense.org/docs/26.0/api/collections.html#schema-parameters).
 
 #### default_sorting_field: 
 
@@ -65,7 +65,7 @@ These used internally by the Silverstripe Typesense module to limit how many rec
 
 ### Configuring your fields
 
-![Adding a new field to your collection](../img/cms-collection-fields-new.png "Adding a new field to your collection")
+![Adding a new field to your collection](img/cms-collection-fields-new.png "Adding a new field to your collection")
 
 
 Fields should correspond with individual fields on your DataObject, but a field can actually represent anything - such as a getter method or an array of results from a relationship - depending on the data type of the field.  You'll need to define a `getTypesenseDocument()` method on your object to provide that information
@@ -106,9 +106,9 @@ Each field can have the following attributes.  Only `name` and `type` are requir
 
 ### Managing your collections
 
-![All of your configured collections](../img/cms-collections-admin.png "All of your configured collections")
+![All of your configured collections](img/cms-collections-admin.png "All of your configured collections")
 
-![Your collection's fields](../img/cms-collection-fields.png "Your collection's fields")
+![Your collection's fields](img/cms-collection-fields.png "Your collection's fields")
 
 Collections can also be created, managed, and deleted in the CMS. What's in the database is considered the "source of truth" that will be synced with Typesense.  Nothing stored on the Typesense server will overwrite the collection you have configured in the CMS.
 
