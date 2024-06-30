@@ -1,6 +1,7 @@
 ## Installation
+`composer require elliot-sawyer/silverstripe-typesense`.
 
-Add this to your composer.json:
+For development or forks, add this to your composer.json
 
 ```json
     "repositories": {
@@ -10,8 +11,3 @@ Add this to your composer.json:
         }
     },
 ```
-
-Then run `composer require elliot-sawyer/silverstripe-typesense`.
-
-The repositories step is not necessary once the module is public.
-
