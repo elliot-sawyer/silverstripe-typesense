@@ -82,6 +82,7 @@ Each field can have the following attributes.  Only `name` and `type` are requir
 * **store**: When set to false, the field value will not be stored on disk. Default: true.
 * **sort**: When set to true, the field will be sortable. Default: true for numbers, false otherwise.
 * **infix**: When set to true, the field value can be infix-searched. Incurs significant memory overhead. Default: false.
+* **stem**: Values are stemmed before indexing in-memory. Default: false. [What is stemming?](https://snowballstem.org/)
 
 #### Field types
 

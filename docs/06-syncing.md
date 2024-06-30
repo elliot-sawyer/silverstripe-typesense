@@ -31,5 +31,5 @@ The module includes a BuildTask called `TypesenseSyncTask`.  Once the collection
 
 The module is configured to automatically update the collection when an object is saved or deleted (or in the case of versioned objects, publish and unpublished).
 
-This can potentially make imports and programmatically generated data slower.  If this is an issue, you can delete the collection before importing or running your build script, then re-install it afterwards and do a bulk-import.
+This can potentially make imports and programmatically generated data slower.  If this is an issue, you can delete the collection before running your build script, then re-install it afterwards and do a bulk-import.
 

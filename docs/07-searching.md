@@ -44,12 +44,12 @@ In practice, you never want to expose your admin-only key in front-end forms.  F
 * https://bfritscher.github.io/typesense-dashboard/#/apikeys
 
 
-| ![Create a search-only key](../img/search-only-key.png "Create a search-only key") | ![Create API Key](../img/create-api-key.png "Create API Key")  |
+| ![Create a search-only key](img/search-only-key.png "Create a search-only key") | ![Create API Key](img/create-api-key.png "Create API Key")  |
 | -------- | ------- |
 
 Select "Search Key Example" and change the description and "collections" array to `Pages` (or the name(s) of the collection(s) this key will be searching) and select "Create API Key" in the bottom right.  You'll be shown the API key _one time_ before it's never shown again - record this value and save it in the TYPESENSE_SEARCH_KEY environment variable.
 
-You'll need to expose this key in a method somewhere, such as Page::getTypesenseSearchKey():
+You'll need to expose this key in a method somewhere, such as `Page::getTypesenseSearchKey()`:
 
 ```php
     public function getTypesenseSearchKey() {
