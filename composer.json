@@ -26,5 +26,12 @@
             "email": "elliot@cashware.nz"
         }
     ],
-    "minimum-stability": "stable"
+    "minimum-stability": "stable",
+    "extra": {
+        "license": {
+            "name": "LGPL3 With Attribution",
+            "author": "Elliot Sawyer",
+            "source": "https://codeberg.org/0x/lgpl3-with-attribution"
+        }
+    }
 }
