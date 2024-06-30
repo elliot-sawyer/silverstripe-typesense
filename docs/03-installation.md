@@ -1,4 +1,5 @@
 ## Installation
+
 `composer require elliot-sawyer/silverstripe-typesense`.
 
 For development or forks, add this to your composer.json
