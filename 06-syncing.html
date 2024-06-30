@@ -520,7 +520,7 @@ h6[id]:hover .heading-anchor-permalink {
 <p>The module includes a BuildTask called <code>TypesenseSyncTask</code>.  Once the collection has been uploaded to Typesense, the TypesenseSyncTask will scan the collection’s RecordClass records and bulk-import all of the documents it has been configured to upload. New records are inserted into Typesense according to their <code>id</code> field, and existing ones are updated with the current database content.</p>
 <h3 id="one-off-saves-or-deletions">One-off saves or deletions <a class="heading-anchor-permalink" href="#one-off-saves-or-deletions">#</a></h3>
 <p>The module is configured to automatically update the collection when an object is saved or deleted (or in the case of versioned objects, publish and unpublished).</p>
-<p>This can potentially make imports and programmatically generated data slower.  If this is an issue, you can delete the collection before importing or running your build script, then re-install it afterwards and do a bulk-import.</p>
+<p>This can potentially make imports and programmatically generated data slower.  If this is an issue, you can delete the collection before running your build script, then re-install it afterwards and do a bulk-import.</p>
 
     </article>
 </div>

@@ -500,7 +500,7 @@ h6[id]:hover .heading-anchor-permalink {
         <h1 id="troubleshooting">Troubleshooting <a class="heading-anchor-permalink" href="#troubleshooting">#</a></h1>
 <h2 id="when-i-run-the-index-task%2C-some-records-are-being-skipped.">When I run the index task, some records are being skipped. <a class="heading-anchor-permalink" href="#when-i-run-the-index-task%2C-some-records-are-being-skipped.">#</a></h2>
 <p>Typesense will validate uploaded data before inserting it into the collection, according to the schema that you’ve provided to it. This means if it receives data where even one field doesn’t match what is expected in the schema, the entire record gets skipped.</p>
-<p>One common example is from the docs, where you’re maybe indexing the pages on your site but some do not have Content to display.  If the field is not marked as <code>optional: true</code>, Typesense will not accept the record if it the field is empty.</p>
+<p>One common example is from the docs, where you’re maybe indexing the pages on your site but some do not have Content to display.  If the field is not marked as <code>optional: true</code>, Typesense will not accept the record if the field is empty.</p>
 
     </article>
 </div>

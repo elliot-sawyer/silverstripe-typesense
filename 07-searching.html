@@ -537,14 +537,14 @@ h6[id]:hover .heading-anchor-permalink {
 <table>
 <thead>
 <tr>
-<th><img src="../img/search-only-key.png" alt="Create a search-only key" title="Create a search-only key"></th>
-<th><img src="../img/create-api-key.png" alt="Create API Key" title="Create API Key"></th>
+<th><img src="img/search-only-key.png" alt="Create a search-only key" title="Create a search-only key"></th>
+<th><img src="img/create-api-key.png" alt="Create API Key" title="Create API Key"></th>
 </tr>
 </thead>
 <tbody></tbody>
 </table>
 <p>Select “Search Key Example” and change the description and “collections” array to <code>Pages</code> (or the name(s) of the collection(s) this key will be searching) and select “Create API Key” in the bottom right.  You’ll be shown the API key <em>one time</em> before it’s never shown again - record this value and save it in the TYPESENSE_SEARCH_KEY environment variable.</p>
-<p>You’ll need to expose this key in a method somewhere, such as Page::getTypesenseSearchKey():</p>
+<p>You’ll need to expose this key in a method somewhere, such as <code>Page::getTypesenseSearchKey()</code>:</p>
 <pre><code class="language-php">    public function getTypesenseSearchKey() {
         return Environment::getEnv('TYPESENSE_SEARCH_KEY');
     }
