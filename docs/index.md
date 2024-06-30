@@ -42,7 +42,7 @@ Typesense supports:
 
 ## Copyright statements
 
-This software includes contributions from Elliot Sawyer, available under the LGPL3 license (with attribution). This attribution statement is required to be shipped with the module, and is displayed within your application. These will appear in certain areas of your application where the module is being used.
+This software includes contributions from Elliot Sawyer, available under the [LGPL3 With Attribution license](https://codeberg.org/0x/silverstripe-typesense/src/branch/main/LICENSE.md). This attribution statement is required to be shipped with the module, and is displayed within your application. These will appear in certain areas of your application where the module is being used.
 
 ## Support
 
@@ -51,3 +51,5 @@ Like my work? Consider shouting me a coffee or a small donation if this module h
 * Bitcoin: 12gSxkqVNr9QMLQMMJdWemBaRRNPghmS3p
 * Bitcoin Cash: 1QETPtssFRM981TGjVg74uUX8kShcA44ni
 * Litecoin: LbyhaTESx3uQvwwd9So4sGSpi4tTJLKBdz
+
+Paid support is available.  Get in touch at https://sawyer.nz/contact
