@@ -32,13 +32,13 @@ Typesense supports:
 
 ## Documentation
 
-* [Development](docs/02-development.md)
-* [Installation](docs/03-installation.md)
-* [Configuration](docs/04-configuration.md)
-* [Managing Collections and Fields](05-docs/collections.md)
-* [Syncing](docs/06-syncing.md)
-* [How to search](docs/07-searching.md)
-* [Troubleshooting](docs/08-troubleshooting.md)
+* [Development](02-development.md)
+* [Installation](03-installation.md)
+* [Configuration](04-configuration.md)
+* [Managing Collections and Fields](05-collections.md)
+* [Syncing](06-syncing.md)
+* [How to search](07-searching.md)
+* [Troubleshooting](08-troubleshooting.md)
 
 ## Copyright statements
 
