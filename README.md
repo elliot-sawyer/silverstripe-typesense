@@ -35,7 +35,7 @@ Typesense supports:
 * [Development](docs/02-development.md)
 * [Installation](docs/03-installation.md)
 * [Configuration](docs/04-configuration.md)
-* [Managing Collections and Fields](05-docs/collections.md)
+* [Managing Collections and Fields](docs/05-collections.md)
 * [Syncing](docs/06-syncing.md)
 * [How to search](docs/07-searching.md)
 * [Troubleshooting](docs/08-troubleshooting.md)
