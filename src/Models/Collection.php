@@ -422,6 +422,10 @@ class Collection extends DataObject
             }
         }
 
+        if($recordClass::singleton()->hasField('ShowInSearch')) {
+            $records = $records->exclude('ShowInSearch', 0);
+        }
+
         return $records;
     }
 
