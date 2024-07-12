@@ -1,5 +1,5 @@
 > [!NOTE]
-> This is a **MIRROR** of [Elliot Sawyer's Silverstripe Typesense project](https://codeberg.org/0x/silverstripe-typesense/).  Please raise issues and pull requests on that repository.
+> This is a **MIRROR** of [Elliot Sawyer's Silverstripe Typesense project](https://codeberg.org/0x/silverstripe-typesense/) that is periodically updated.  For the latest code and releases, please clone from there. Any issues or pull requests should be raised on that repository.
 
 # Typesense Search for Silverstripe
 
