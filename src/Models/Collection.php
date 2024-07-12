@@ -221,7 +221,7 @@ class Collection extends DataObject
     {
         $arr = [];
         foreach($this->Fields() as $field) {
-            $arr[] = [
+            $schema = [
                 'name' => $field->name ?? '.*',
                 'type' => $field->type ?? 'auto',
                 'facet' => (bool) $field->facet,
@@ -231,6 +231,22 @@ class Collection extends DataObject
                 'store' => (bool) $field->store,
                 'infix' => (bool) $field->infix,
             ];
+
+            if($field->hasMethod('getTypesenseField')) {
+                $extraAttributes = $field->getTypesenseField();
+                if($extraAttributes) {
+                    unset($schema['facet']);
+                    unset($schema['optional']);
+                    unset($schema['index']);
+                    unset($schema['sort']);
+                    unset($schema['store']);
+                    unset($schema['infix']);
+                    unset($schema['stem']);
+                    $schema += $extraAttributes;
+                }
+            }
+            $arr[] = $schema;
+            // $this->invokeWithExtensions('updateTypesenseField', $field);
         }
         foreach($this->config()->default_collection_fields as $field) {
             $arr[] = $field;
@@ -261,6 +277,8 @@ class Collection extends DataObject
             //poor man's update: delete the collection first
             //then recreate it.  Requires a reindex
             //TODO: itemized schemas
+
+
             if($client->collections[$this->Name]->exists()) {
                 $client->collections[$this->Name]->delete();
             }
@@ -343,7 +361,7 @@ class Collection extends DataObject
         $i = 0;
         $count = $this->getRecordsCount();
         DB::alteration_message(
-            _t(Collection::class.'.IMPORT_Indexing', "Indexing {name}, (Limit: {limit}, Timeout: {timeout}", ['name' => $this->Name, 'limit' => $limit, 'timeout' => $connection_timeout])
+            _t(Collection::class.'.IMPORT_Indexing', "Indexing {name}, (Limit: {limit}, Timeout: {timeout})", ['name' => $this->Name, 'limit' => $limit, 'timeout' => $connection_timeout])
         );
         if($count === 0) {
             DB::alteration_message(
