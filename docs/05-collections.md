@@ -16,7 +16,7 @@ ElliotSawyer\SilverstripeTypesense\Typesense:
       symbols_to_index: # '+'
       import_limit: 10000
       connection_timeout: 2 
-      excludedClasses:
+      excluded_classes:
         - SilverStripe\ErrorPage\ErrorPage
 ```
 
