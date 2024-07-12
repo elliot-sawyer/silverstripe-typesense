@@ -13,7 +13,7 @@ en:
     DESCRIPTION_TokenSeperators: 'List of symbols or special characters to be used for splitting the text into individual words in addition to space and new-line characters. For e.g. you can add - (hyphen) to this list to make a word like non-stick to be split on hyphen and indexed as two separate words. <a href="https://typesense.org/docs/guide/tips-for-searching-common-types-of-data.html" target="_new">More info</a>'
     FIELDERROR_RecordClass: 'Invalid class'
     IMPORT_AddedDocumentsToCollection: 'added [{limitcount} / {count}] documents to {name}'
-    IMPORT_Indexing: 'Indexing {name}, (Limit: {limit}, Timeout: {timeout}'
+    IMPORT_Indexing: 'Indexing {name}, (Limit: {limit}, Timeout: {timeout})'
     IMPORT_NoDocumentsFound: 'no documents found!'
     LABEL_ConnectionTimeout: 'Connection timeout'
     LABEL_DefaultSortingField: 'Default sorting field'
