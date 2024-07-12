@@ -1,3 +1,6 @@
+> [!NOTE]
+> This is a **MIRROR** of [Elliot Sawyer's Silverstripe Typesense project](https://codeberg.org/0x/silverstripe-typesense/).  Please raise issues and pull requests on that repository.
+
 # Typesense Search for Silverstripe
 
 **Author**: [Elliot Sawyer](https://sawyer.nz)
